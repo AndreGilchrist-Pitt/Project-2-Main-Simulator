@@ -33,6 +33,7 @@ The `Paths/paths.py` file defines centralized path constants for the project:
 - `SRC_DIR`: Source code directory (`Src/`)
 - `UTILS_DIR`: Utilities directory (`Src/Utils/`)
 - `CLASSES_DIR`: Classes directory (`Src/Utils/Classes/`)
+- `CLASS_DIAGRAMS_DIR`: Class diagrams directory (`Src/Utils/ClassDiagrams/`)
 - `UNITTEST_DIR`: Unit test directory (`UnitTest/`)
 - `UNITTEST_CLASSES_DIR`: Unit test classes directory (`UnitTest/Classes/`)
 
