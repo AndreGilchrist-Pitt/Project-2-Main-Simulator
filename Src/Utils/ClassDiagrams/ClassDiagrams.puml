@@ -1,0 +1,66 @@
+@startuml
+title Utils Classes (Bus, Generator, Load, Transformer, TransmissionLine)
+
+class Bus {
+  -_bus_counter : int
+  -_bus_registry : dict
+  +name : str
+  +nominal_kv : float
+  +bus_index : int
+  --
+  +__init__(name: str, nominal_kv: float)
+  +get_bus_index(name: str)
+}
+
+class Generator {
+  +name : str
+  +bus1_name : str
+  +voltage_setpoint : float
+  +mw_setpoint : float
+  --
+  +__init__(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
+  +__repr__()
+}
+
+class Load {
+  +name : str
+  +bus1_name : str
+  +mw : float
+  +mvar : float
+  --
+  +__init__(name: str, bus1_name: str, mw: float, mvar: float)
+  +__repr__()
+}
+
+class Transformer {
+  +name : str
+  +bus1_name : str
+  +bus2_name : str
+  +r : float
+  +x : float
+  --
+  +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float)
+  +__repr__()
+}
+
+class TransmissionLine {
+  +name : str
+  +bus1_name : str
+  +bus2_name : str
+  +r : float
+  +x : float
+  +g : float
+  +b : float
+  --
+  +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
+  +__repr__()
+}
+
+Generator "1" --> "1" Bus : connects to\n(bus1_name)
+Load "1" --> "1" Bus : connects to\n(bus1_name)
+Transformer "1" --> "1" Bus : bus1_name
+Transformer "1" --> "1" Bus : bus2_name
+TransmissionLine "1" --> "1" Bus : bus1_name
+TransmissionLine "1" --> "1" Bus : bus2_name
+
+@enduml
