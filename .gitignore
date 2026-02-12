@@ -21,5 +21,3 @@ build/
 .pytest_cache/
 .coverage
 
-Milestones/
-UnitTest/
