@@ -9,9 +9,9 @@ Target Completion:
 - [x] Milestone 1: Creating Equipment Classes
   - Target Date: 2/12/2026
   - Status: Finished, Checked by Collin
-- [ ] Milestone 2: 
-  - Target Date: 
-  - Status: Not started
+- [ ] Milestone 2: Creating the Circuit Class
+  - Target Date: 2/17/2026
+  - Status: In progress
 - [ ] Milestone 3: 
   - Target Date: 
   - Status: Not started
@@ -54,8 +54,14 @@ Target Completion:
 | --- | --- | --- | --- | --- | --- |
 | 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
 
+### Milestone 2: Creating the Circuit Class
+- [ ] Circuit
 
+### Circuit Class
 
+| Date  | Milestone   | Progress Update     | Issues/Risks | Next Steps | Owner |
+|-------|-------------|---------------------|--------------|--|-------|
+| | |  |     |  |    |
 Comments/Notes:
 - Scope: Implement Bus, Transformer, TransmissionLine, Load, Generator classes as data containers.
 - Deliverables: Python class files, validation script, documentation, class diagrams.
@@ -68,6 +74,8 @@ Comments/Notes:
 | 2/12/2026 | Milestone 2 | Finished checked by Collin<br/>would like JW review | No issues    |  | AG    |
 
 ## Change Log
-| Date | Change | Reason | Approved By |
-| --- | --- | --- | --- |
-| |  |  |  |
+| Date      | Change  | Reason                                          | Approved By |
+|-----------|---------|-------------------------------------------------|-------------|
+| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main | AG          |
+| 2/12/2026 | a5a3186 | Created Milestone 2                             | AG          |
+| 2/12/2026 | a369a02 | Updated Milestone Tracker                       | AG          |
