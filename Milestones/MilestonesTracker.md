@@ -57,7 +57,7 @@ Target Completion:
 ### Milestone 2: Creating the Circuit Class
 - [ ] Circuit
 
-### Bus Class
+### Circuit Class
 
 | Date  | Milestone   | Progress Update     | Issues/Risks | Next Steps | Owner |
 |-------|-------------|---------------------|--------------|--|-------|
