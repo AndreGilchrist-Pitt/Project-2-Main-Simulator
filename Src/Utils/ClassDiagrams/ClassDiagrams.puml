@@ -1,5 +1,5 @@
 @startuml
-title Utils Classes (Bus, Generator, Load, Transformer, TransmissionLine)
+title Utils Classes (Bus, Generator, Load, Transformer, TransmissionLine, Circuit)
 
 class Bus {
   -_bus_counter : int
@@ -55,6 +55,28 @@ class TransmissionLine {
   +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
   +__repr__()
 }
+
+class Circuit {
+  +name : str
+  +buses : dict
+  +transformers : dict
+  +transmission_lines : dict
+  +generators : dict
+  +loads : dict
+  --
+  +__init__(name: str)
+  +add_bus(name: str, nominal_kv: float)
+  +add_transformer(name: str, bus1_name: str, bus2_name: str, r: float, x: float)
+  +add_transmission_line(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
+  +add_generator(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
+  +add_load(name: str, bus1_name: str, mw: float, mvar: float)
+}
+
+Circuit "1" *-- "0..*" Bus : contains
+Circuit "1" *-- "0..*" Transformer : contains
+Circuit "1" *-- "0..*" TransmissionLine : contains
+Circuit "1" *-- "0..*" Generator : contains
+Circuit "1" *-- "0..*" Load : contains
 
 Generator "1" --> "1" Bus : connects to\n(bus1_name)
 Load "1" --> "1" Bus : connects to\n(bus1_name)
