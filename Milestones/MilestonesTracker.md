@@ -78,3 +78,4 @@ Comments/Notes:
 |-----------|---------|-------------------------------------------------|-------------|
 | 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main | AG          |
 | 2/12/2026 | a5a3186 | Created Milestone 2                             | AG          |
+| 2/12/2026 | a369a02 | Updated Milestone Tracker                       | AG          |
