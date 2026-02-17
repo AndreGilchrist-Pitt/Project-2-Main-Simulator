@@ -9,9 +9,9 @@ Target Completion:
 - [x] Milestone 1: Creating Equipment Classes
   - Target Date: 2/12/2026
   - Status: Finished, Checked by Collin
-- [ ] Milestone 2: Creating the Circuit Class
+- [x] Milestone 2: Creating the Circuit Class
   - Target Date: 2/17/2026
-  - Status: In progress
+  - Status: Finised
 - [ ] Milestone 3: 
   - Target Date: 
   - Status: Not started
@@ -28,40 +28,40 @@ Target Completion:
 
 | Date  | Milestone   | Progress Update     | Issues/Risks | Next Steps | Owner |
 |-------|-------------|---------------------|--------------|--|-------|
-| 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin | No issues    |  | AG    |
 
 ### Transformer Class
 
-| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-| --- | --- | --- | --- | --- | --- |
-| 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
+| Date | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+| --- |-------------| --- | --- | --- | --- |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin | No issues    |  | AG    |
 
 ### Transmission Line Class
 
-| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-| --- | --- | --- | --- | --- | --- |
-| 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
+| Date | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+| --- |-------------| --- | --- | --- | --- |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin | No issues    |  | AG    |
 
 ### Load Class
 
-| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-| --- | --- | --- | --- | --- | --- |
-| 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
+| Date | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+| --- |-------------| --- | --- | --- | --- |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin | No issues    |  | AG    |
 
 ### Generator Class
 
-| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-| --- | --- | --- | --- | --- | --- |
-| 2/12/2026 | Milestone 2 | Finished checked by Collin | No issues    |  | AG    |
+| Date | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+| --- |-------------| --- | --- | --- | --- |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin | No issues    |  | AG    |
 
 ### Milestone 2: Creating the Circuit Class
-- [ ] Circuit
+- [x] Circuit
 
 ### Circuit Class
 
-| Date  | Milestone   | Progress Update     | Issues/Risks | Next Steps | Owner |
-|-------|-------------|---------------------|--------------|--|-------|
-| | |  |     |  |    |
+| Date      | Milestone   | Progress Update     | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|---------------------|--------------|--|-------|
+| 2/17/2026 | Milestone 2 | Finished checked by Collin |  No issues   |  | AG    |
 Comments/Notes:
 - Scope: Implement Bus, Transformer, TransmissionLine, Load, Generator classes as data containers.
 - Deliverables: Python class files, validation script, documentation, class diagrams.
@@ -69,9 +69,11 @@ Comments/Notes:
 - Assessment: oral review covering purpose, attributes, and line-by-line understanding.
 
 ## Weekly/Check-In Log
-| Date | Milestone | Progress Update                                     | Issues/Risks | Next Steps | Owner |
-| --- | --- |-----------------------------------------------------| --- | --- | --- |
-| 2/12/2026 | Milestone 2 | Finished checked by Collin<br/>would like JW review | No issues    |  | AG    |
+| Date      | Milestone   | Progress Update                                     | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|-----------------------------------------------------| --- | --- | --- |
+| 2/12/2026 | Milestone 1 | Finished checked by Collin<br/>would like JW review | No issues    |  | AG    |
+| 2/17/2026 | Milestone 1 | Created a new Milestone1 Branch to submit           | No issues    |  | AG    |
+| 2/17/2026 | Milestone 2 | Finished checked by Collin                          | No issues    |  | AG    |
 
 ## Change Log
 | Date      | Change  | Reason                                          | Approved By |
@@ -80,3 +82,4 @@ Comments/Notes:
 | 2/12/2026 | a5a3186 | Created Milestone 2                             | AG          |
 | 2/12/2026 | a369a02 | Updated Milestone Tracker                       | AG          |
 | 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents  | AG          |
+| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                  | AG          |
