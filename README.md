@@ -22,6 +22,8 @@
 4. **Commit**: Commit changes to `Development` branch
 5. **Merge**: Once stable and tested, create a pull request to merge into `main`
 6. **Review**: Review changes before merging to production
+7. **Update**: Update `MilestonesTracker.md` with your latest changes to log progress
+
 
 ## Directory Structure
 
