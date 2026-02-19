@@ -88,11 +88,12 @@ Comments/Notes:
 | |  |  |  | |  |
 
 ## Weekly/Check-In Log
-| Date      | Milestone   | Progress Update                                     | Issues/Risks | Next Steps | Owner |
-|-----------|-------------|-----------------------------------------------------| --- | --- | --- |
-| 2/12/2026 | Milestone 1 | Finished checked by Collin<br/>would like JW review | No issues    |  | AG    |
-| 2/17/2026 | Milestone 1 | Created a new Milestone1 Branch to submit           | No issues    |  | AG    |
-| 2/17/2026 | Milestone 2 | Finished checked by Collin                          | No issues    |  | AG    |
+| Date      | Milestone   | Progress Update                                     | Issues/Risks | Next Steps      | Owner |
+|-----------|-------------|-----------------------------------------------------|--------------|-----------------|-------|
+| 2/12/2026 | Milestone 1 | Finished checked by Collin<br/>would like JW review | No issues    |                 | AG    |
+| 2/17/2026 | Milestone 1 | Created a new Milestone1 Branch to submit           | No issues    |                 | AG    |
+| 2/17/2026 | Milestone 2 | Finished checked by Collin                          | No issues    |                 | AG    |
+| 2/19/2026 | Milestone 3 | Misc Merges & Created Milestone 3/4 Info            | No issues    | Update Classes  | AG    |
 
 ## Change Log
 | Date      | Change  | Reason                                          | Approved By |
@@ -102,3 +103,4 @@ Comments/Notes:
 | 2/12/2026 | a369a02 | Updated Milestone Tracker                       | AG          |
 | 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents  | AG          |
 | 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                  | AG          |
+| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker         | AG          |
