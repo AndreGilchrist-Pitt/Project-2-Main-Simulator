@@ -1,6 +1,13 @@
 # Project-2-Main-Simulator
 
 ## Branches
+### **Milestone**
+
+- Milestone branches are dedicated submission branches for formal review and grading
+- Each milestone represents a specific deliverable or phase of the project
+  - Create a new milestone branch from `main` when ready to submit completed work
+  - Do not modify milestone branches after submission unless explicitly requested
+  - Example branch names: `Milestone1`, `Milestone2`, etc.
 
 ### **main**
 
