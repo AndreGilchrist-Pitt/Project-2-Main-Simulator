@@ -12,10 +12,12 @@ Target Completion:
 - [x] Milestone 2: Creating the Circuit Class
   - Target Date: 2/17/2026
   - Status: Finised
-- [ ] Milestone 3: 
-  - Target Date: 
+- [ ] Milestone 3: Per-Unit Primitive Admittance Matrices
+  - Target Date: 2/24/2026
   - Status: Not started
-
+- [ ] Milestone 4: Ybus Admittance Matrix
+  - Target Date: 3/1/2026
+  - Status: Not started
 ## Milestone Details
 ### Milestone 1: Creating Equipment Classes
 - [x] Bus
@@ -67,6 +69,23 @@ Comments/Notes:
 - Deliverables: Python class files, validation script, documentation, class diagrams.
 - Validation: simple object creation test cases for each class.
 - Assessment: oral review covering purpose, attributes, and line-by-line understanding.
+
+### Milestone 3: Per-Unit Primitive Admittance Matrices
+
+- [ ] Transformer Class Updates
+- [ ] TransmissionLine Class Updates
+
+| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|---------------------|--------------|--|-------|
+| |  |  |  | |  |
+
+### Milestone 4: Ybus Admittance Matrix
+
+- [ ] Extending the Circuit Class
+
+| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|---------------------|--------------|--|-------|
+| |  |  |  | |  |
 
 ## Weekly/Check-In Log
 | Date      | Milestone   | Progress Update                                     | Issues/Risks | Next Steps | Owner |
