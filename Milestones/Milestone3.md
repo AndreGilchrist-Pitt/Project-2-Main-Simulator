@@ -103,6 +103,6 @@ Students must submit:
 3. Clear, readable code with appropriate comments.
 4. Generated documentation and class diagrams for each updated class.
 
-## Assessment
+## Assessment  
 
 For assessment, you will be required to talk through this milestone with the instructors. You are responsible for articulately describing each relevant line of code when prompted.

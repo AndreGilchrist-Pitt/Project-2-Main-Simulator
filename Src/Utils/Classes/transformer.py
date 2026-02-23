@@ -48,7 +48,7 @@ class Transformer:
 
 
 if __name__ == "__main__":
-    # Milestone 3 validation: Yseries and Yprim only
+    # Milestone 3 validation: Yseries and Yprim only outputted to console
     print("=== Transformer Class Validation ===\n")
 
     transformer1 = Transformer("T1", "Bus 1", "Bus 2", 0.01, 0.10)

@@ -72,7 +72,7 @@ Comments/Notes:
 
 ### Milestone 3: Per-Unit Primitive Admittance Matrices
 - [x] Transformer Class Updates
-- [x] TransmissionLine Class Updates
+- [x] TransmissionLine Class Updates  
 
 ### Transformer Class
 
