@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class TransmissionLine:
     """
     Represents a transmission line in a power system network.
@@ -27,6 +30,28 @@ class TransmissionLine:
         self.x = x
         self.g = g
         self.b = b
+        # Series admittance: Yseries = 1/(r + jx), per-unit values
+        self.Yseries = 1 / (r + 1j * x)
+        # Shunt admittance: Yshunt = g + jb, per-unit values
+        self.Yshunt = g + 1j * b
+
+    def calc_yprim(self) -> pd.DataFrame:
+        """
+        Return the 2×2 primitive admittance matrix for the transmission line
+        pi-model (Yseries with Yshunt/2 at each bus).
+
+        Returns:
+            pandas.DataFrame: Yprim with bus1_name and bus2_name as row/column labels.
+        """
+        labels = [self.bus1_name, self.bus2_name]
+        Y11 = self.Yseries + self.Yshunt / 2
+        Y12 = -self.Yseries
+        Yprim = pd.DataFrame(
+            [[Y11, Y12], [Y12, Y11]],
+            index=labels,
+            columns=labels,
+        )
+        return Yprim
 
     def __repr__(self):
         return (f"TransmissionLine(name='{self.name}', bus1='{self.bus1_name}', "
@@ -34,33 +59,13 @@ class TransmissionLine:
 
 
 if __name__ == "__main__":
-    # Simple validation test
+    # Milestone 3 validation: Yseries, Yshunt, and Yprim only
     print("=== TransmissionLine Class Validation ===\n")
 
-    # Create transmission line
     line1 = TransmissionLine("Line 1", "Bus 1", "Bus 2", 0.02, 0.25, 0.0, 0.04)
 
-    # Test attributes
-    print(f"Line name: {line1.name}")
-    print(f"Bus 1 name: {line1.bus1_name}")
-    print(f"Bus 2 name: {line1.bus2_name}")
-    print(f"Series resistance (r): {line1.r}")
-    print(f"Series reactance (x): {line1.x}")
-    print(f"Shunt conductance (g): {line1.g}")
-    print(f"Shunt susceptance (b): {line1.b}")
+    print("Series and shunt admittances:")
+    print(line1.Yseries, line1.Yshunt)
 
-    # Test __repr__
-    print(f"\nString representation:\n{repr(line1)}")
-
-    # Create multiple lines
-    print("\n--- Creating Multiple Transmission Lines ---")
-    line2 = TransmissionLine("Line 2", "Bus 2", "Bus 3", 0.03, 0.30, 0.0, 0.05)
-    line3 = TransmissionLine("Line 3", "Bus 3", "Bus 4", 0.025, 0.28, 0.0, 0.045)
-
-    print(repr(line2))
-    print(repr(line3))
-
-    # Test typical values
-    print("\n--- Typical Values Check ---")
-    print(f"Line 1: x/r ratio = {line1.x / line1.r:.2f} (typical: 5-15 for overhead lines)")
-    print(f"Line 1: Shunt conductance g = {line1.g} (typically zero or very small)")
+    print("\nPrimitive admittance matrix:")
+    print(line1.calc_yprim())

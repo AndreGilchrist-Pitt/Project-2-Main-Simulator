@@ -12,9 +12,9 @@ Target Completion:
 - [x] Milestone 2: Creating the Circuit Class
   - Target Date: 2/17/2026
   - Status: Finised
-- [ ] Milestone 3: Per-Unit Primitive Admittance Matrices
+- [x] Milestone 3: Per-Unit Primitive Admittance Matrices
   - Target Date: 2/24/2026
-  - Status: Not started
+  - Status: Finished
 - [ ] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Not started
@@ -71,13 +71,25 @@ Comments/Notes:
 - Assessment: oral review covering purpose, attributes, and line-by-line understanding.
 
 ### Milestone 3: Per-Unit Primitive Admittance Matrices
+- [x] Transformer Class Updates
+- [x] TransmissionLine Class Updates
 
-- [ ] Transformer Class Updates
-- [ ] TransmissionLine Class Updates
+### Transformer Class
 
 | Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-|-----------|-------------|---------------------|--------------|--|-------|
-| |  |  |  | |  |
+|------|-----------|-----------------|--------------|------------|-------|
+| 2/22/2026 | Milestone 3 | Yseries stored; calc_yprim() returns 2×2 pandas.DataFrame with bus labels | No issues |  | AG |
+
+### Transmission Line Class
+
+| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
+|------|-----------|-----------------|--------------|------------|-------|
+| 2/22/2026 | Milestone 3 | Yseries, Yshunt stored; calc_yprim() returns 2×2 pandas.DataFrame with bus labels (pi-model) | No issues |  | AG |
+
+Comments/Notes:
+- Scope: Implement calc_yprim for Transformer and TransmissionLine; compute and store Yseries (and Yshunt for lines).
+- Deliverables: Updated Python class files, validation script, documentation, class diagrams.
+- Validation: Yseries/Yshunt and calc_yprim() output per Milestone 3 spec.
 
 ### Milestone 4: Ybus Admittance Matrix
 
