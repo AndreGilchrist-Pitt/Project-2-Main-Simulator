@@ -38,8 +38,10 @@ class Transformer {
   +bus2_name : str
   +r : float
   +x : float
+  +Yseries : complex
   --
   +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float)
+  +calc_yprim() : pd.DataFrame
   +__repr__()
 }
 
@@ -51,8 +53,11 @@ class TransmissionLine {
   +x : float
   +g : float
   +b : float
+  +Yseries : complex
+  +Yshunt : complex
   --
   +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
+  +calc_yprim() : pd.DataFrame
   +__repr__()
 }
 

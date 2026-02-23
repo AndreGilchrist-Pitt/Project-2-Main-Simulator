@@ -1,3 +1,4 @@
+import pandas as pd
 
 
 class Transformer:
@@ -17,38 +18,43 @@ class Transformer:
             bus2_name: Name of the second bus (typically low voltage side)
             r: Resistance in per-unit or ohms
             x: Reactance in per-unit or ohms
+            calc yprim(): returns the 2 × 2 primitive admittance matrix for a two-terminal series element
         """
         self.name = name
         self.bus1_name = bus1_name
         self.bus2_name = bus2_name
         self.r = r
         self.x = x
+        # Series admittance: Yseries = 1/(r + jx), per-unit values
+        self.Yseries = 1 / (r + 1j * x)
+
+    def calc_yprim(self) -> pd.DataFrame:
+        """
+        Return the 2×2 primitive admittance matrix for a two-terminal series element.
+
+        Returns:
+            pandas.DataFrame: Yprim with bus1_name and bus2_name as row/column labels.
+        """
+        labels = [self.bus1_name, self.bus2_name]
+        Yprim = pd.DataFrame(
+            [[self.Yseries, -self.Yseries], [-self.Yseries, self.Yseries]],
+            index=labels,
+            columns=labels,
+        )
+        return Yprim
 
     def __repr__(self):
         return f"Transformer(name='{self.name}', bus1='{self.bus1_name}', bus2='{self.bus2_name}', r={self.r}, x={self.x})"
 
 
 if __name__ == "__main__":
-    # Simple validation test
+    # Milestone 3 validation: Yseries and Yprim only
     print("=== Transformer Class Validation ===\n")
 
-    # Create transformer
-    t1 = Transformer("T1", "Bus 1", "Bus 2", 0.01, 0.10)
+    transformer1 = Transformer("T1", "Bus 1", "Bus 2", 0.01, 0.10)
 
-    # Test attributes
-    print(f"Transformer name: {t1.name}")
-    print(f"Bus 1 name: {t1.bus1_name}")
-    print(f"Bus 2 name: {t1.bus2_name}")
-    print(f"Resistance (r): {t1.r}")
-    print(f"Reactance (x): {t1.x}")
+    print("Series admittance:")
+    print(transformer1.Yseries)
 
-    # Test __repr__
-    print(f"\nString representation:\n{repr(t1)}")
-
-    # Create multiple transformers
-    print("\n--- Creating Multiple Transformers ---")
-    t2 = Transformer("T2", "Bus 2", "Bus 3", 0.02, 0.15)
-    t3 = Transformer("T3", "Bus 3", "Bus 4", 0.015, 0.12)
-
-    print(repr(t2))
-    print(repr(t3))
+    print("\nPrimitive admittance matrix:")
+    print(transformer1.calc_yprim())
