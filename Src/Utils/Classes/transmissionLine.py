@@ -59,7 +59,7 @@ class TransmissionLine:
 
 
 if __name__ == "__main__":
-    # Milestone 3 validation: Yseries, Yshunt, and Yprim only outputted
+    # Milestone 3 validation: Yseries, Yshunt, and Yprim only
     print("=== TransmissionLine Class Validation ===\n")
 
     line1 = TransmissionLine("Line 1", "Bus 1", "Bus 2", 0.02, 0.25, 0.0, 0.04)
