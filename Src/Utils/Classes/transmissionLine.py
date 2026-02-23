@@ -30,10 +30,15 @@ class TransmissionLine:
         self.x = x
         self.g = g
         self.b = b
-        # Series admittance: Yseries = 1/(r + jx), per-unit values
-        self.Yseries = 1 / (r + 1j * x)
-        # Shunt admittance: Yshunt = g + jb, per-unit values
-        self.Yshunt = g + 1j * b
+
+    @property
+    # Series admittance: Yseries = 1/(r + jx), per-unit values
+    def Yseries(self):
+        return 1 / (self.r + 1j * self.x)
+    @property
+    # Shunt admittance: Yshunt = g + jb, per-unit values
+    def Yshunt(self):
+        return self.g + 1j * self.b
 
     def calc_yprim(self) -> pd.DataFrame:
         """
