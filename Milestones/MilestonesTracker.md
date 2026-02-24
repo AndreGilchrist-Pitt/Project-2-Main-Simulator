@@ -14,7 +14,7 @@ Target Completion:
   - Status: Finished
 - [x] Milestone 3: Per-Unit Primitive Admittance Matrices
   - Target Date: 2/24/2026
-  - Status: Finished
+  - Status: Finished, checked by Dr. Kerestes
 - [ ] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Not started
@@ -108,6 +108,7 @@ Comments/Notes:
 | 2/19/2026 | Milestone 3 | Misc Merges & Created Milestone 3/4 Info                       | No issues    | Update Classes  | AG |
 | 2/22/2026 | Milestone 3 | Implemented calc_yprim for Transformer and TransmissionLine    | No issues    |  | JW |
 | 2/23/2026 | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
+| 2/24/2026 | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
 
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
