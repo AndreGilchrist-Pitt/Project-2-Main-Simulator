@@ -75,6 +75,7 @@ class Circuit {
   +add_transmission_line(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
   +add_generator(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
   +add_load(name: str, bus1_name: str, mw: float, mvar: float)
+  +calc_ybus() : void
 }
 
 Circuit "1" *-- "0..*" Bus : contains

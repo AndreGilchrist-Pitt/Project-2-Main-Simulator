@@ -109,7 +109,7 @@ Comments/Notes:
 | 2/22/2026 | Milestone 3 | Implemented calc_yprim for Transformer and TransmissionLine    | No issues    |  | JW |
 | 2/23/2026 | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
 | 2/24/2026 | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
-
+| 2/24/2026 | Milestone 4 | Update to Milestone 4 introduced calc_ybus                     | None         |  | AG |
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
 |-----------|---------|----------------------------------------------------------------|-------------|
@@ -122,3 +122,4 @@ Comments/Notes:
 | 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine    | JW          |
 | 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property | AG          |
 | 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
+| 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                 | AG          |
