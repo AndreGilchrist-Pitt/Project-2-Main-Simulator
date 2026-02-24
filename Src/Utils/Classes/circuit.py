@@ -1,3 +1,5 @@
+import numpy as np
+
 from Src.Utils.Classes.bus import Bus
 from Src.Utils.Classes.transformer import Transformer
 from Src.Utils.Classes.transmissionLine import TransmissionLine
@@ -26,6 +28,59 @@ class Circuit:
         self.transmission_lines = {}
         self.generators = {}
         self.loads = {}
+        self.ybus = None
+
+    def calc_ybus(self):
+        """
+        Compute the system Ybus (nodal admittance) matrix.
+
+        Assembles Ybus by stamping the primitive admittance matrices of all
+        transformers and transmission lines into an N×N complex matrix,
+        where N is the number of buses.
+
+        Updates self.ybus in-place. Does not return a value.
+
+        Raises:
+            ValueError: If an element references a bus not in the circuit,
+                        if a connected bus has a zero diagonal entry,
+                        or if Ybus is not symmetric.
+        """
+        # Initialize the Ybus Matrix
+        N = len(self.buses)
+        self.ybus = np.zeros((N, N), dtype=complex)
+
+        # Establish Bus Index Mapping
+        bus_index = {name: idx for idx, name in enumerate(self.buses)}
+
+        # Iterate Through All Power Delivery Elements
+        elements = list(self.transformers.values()) + list(self.transmission_lines.values())
+
+        # Stamp the Primitive Matrix into Ybus
+        for element in elements:
+            yprim = element.calc_yprim()
+            bus_names = list(yprim.index)
+
+            for bname in bus_names:
+                if bname not in bus_index:
+                    raise ValueError(f"Element '{element.name}' references bus '{bname}' not in circuit")
+            indices = [bus_index[b] for b in bus_names]
+
+            for r,row_bus in enumerate(bus_names):
+                for c,col_bus in enumerate(bus_names):
+                    i = indices[r]
+                    j = indices[c]
+                    self.ybus[i,j] += yprim.loc[row_bus,col_bus]
+        # Numerical Consistency Check
+        connected_buses = set()
+        for element in elements:
+            connected_buses.update(list(element.calc_yprim().index))
+
+        for bname in connected_buses:
+            idx = bus_index[bname]
+            if self.ybus[idx,idx] == 0:
+                raise ValueError(f"Bus '{bname}' has a zero diagonal entry in Ybus")
+        if not np.allclose(self.ybus, self.ybus.T, atol=1e-10):
+            raise ValueError("Ybus is not symmetric")
 
     def add_bus(self, name: str, nominal_kv: float):
         """
@@ -199,3 +254,50 @@ if __name__ == "__main__":
         print("ERROR: Duplicate name not detected!")
     except ValueError as e:
         print(f"Correctly caught duplicate: {e}")
+
+    print("\n=== Milestone 4: Ybus Validation ===\n")
+
+    Bus._bus_counter = 0
+    Bus._bus_registry.clear()
+
+    c = Circuit("Five-Bus Glover Example 6.9")
+
+    # PowerWorld Bus Data
+    c.add_bus("Bus1", 15.0)  # One
+    c.add_bus("Bus2", 345.0)  # Two
+    c.add_bus("Bus3", 15.0)  # Three
+    c.add_bus("Bus4", 345.0)  # Four
+    c.add_bus("Bus5", 345.0)  # Five
+
+    # Transformers (using PowerWorld R values)
+    c.add_transformer("T1", "Bus1", "Bus5", 0.0015, 0.02)
+    c.add_transformer("T2", "Bus3", "Bus4", 0.00075, 0.01)
+
+    # Transmission lines (using PowerWorld values)
+    c.add_transmission_line("Line1", "Bus4", "Bus2", 0.009, 0.1, 0.0, 1.72)
+    c.add_transmission_line("Line2", "Bus5", "Bus2", 0.0045, 0.05, 0.0, 0.88)
+    c.add_transmission_line("Line3", "Bus5", "Bus4", 0.00225, 0.025, 0.0, 0.44)
+
+    # Generators (from PowerWorld)
+    c.add_generator("G1", "Bus1", 1.0, 0.0)
+    c.add_generator("G2", "Bus3", 1.0, 520.0)
+
+    # Loads (from PowerWorld)
+    c.add_load("Load2", "Bus2", 800.0, 280.0)
+    c.add_load("Load3", "Bus3", 80.0, 40.0)
+
+    # Calculate Ybus
+    c.calc_ybus()
+
+    # Display results
+    print("Calculated Ybus Matrix:")
+    print(f"{'':>8}", end="")
+    for i in range(5):
+        print(f"{'Bus' + str(i + 1):>20}", end="")
+    print()
+
+    for i, row in enumerate(c.ybus):
+        print(f"{'Bus' + str(i + 1):>8}", end="")
+        for val in row:
+            print(f"  {val.real:+8.4f}{val.imag:+8.4f}j", end="")
+        print()
