@@ -32,7 +32,7 @@ class Transformer:
         return 1 / (self.r + 1j * self.x)
     @property
     # Series admittance: Yseries = 1/(r + jx), per-unit values
-    def Yseries(self):
+    def Yseries(self) -> complex:
         return self._yseries
 
     def calc_yprim(self) -> pd.DataFrame:

@@ -40,10 +40,10 @@ class TransmissionLine:
     def _calc_Yshunt(self):
         return self.g + 1j * self.b
     @property
-    def Yseries(self):
+    def Yseries(self) -> complex:
         return self._yseries
     @property
-    def Yshunt(self):
+    def Yshunt(self) -> complex:
         return self._yshunt
 
     def calc_yprim(self) -> pd.DataFrame:
