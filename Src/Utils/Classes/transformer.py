@@ -25,11 +25,15 @@ class Transformer:
         self.bus2_name = bus2_name
         self.r = r
         self.x = x
+        self._yseries = self._calc_Yseries()
 
+    # Series admittance: Yseries = 1/(r + jx), per-unit values
+    def _calc_Yseries(self):
+        return 1 / (self.r + 1j * self.x)
     @property
     # Series admittance: Yseries = 1/(r + jx), per-unit values
     def Yseries(self):
-        return 1 / (self.r + 1j * self.x)
+        return self._yseries
 
     def calc_yprim(self) -> pd.DataFrame:
         """
