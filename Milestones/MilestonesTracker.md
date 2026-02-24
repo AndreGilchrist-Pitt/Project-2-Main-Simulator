@@ -110,13 +110,14 @@ Comments/Notes:
 | 2/23/2026 | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
 
 ## Change Log
-| Date      | Change  | Reason                                                          | Approved By |
-|-----------|---------|-----------------------------------------------------------------|-------------|
-| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main                 | AG          |
-| 2/12/2026 | a5a3186 | Created Milestone 2                                             | AG          |
-| 2/12/2026 | a369a02 | Updated Milestone Tracker                                       | AG          |
-| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents                  | AG          |
-| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                                  | AG          |
-| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker                         | AG          |
-| 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine     | JW          |
-| 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property  | AG          |
+| Date      | Change  | Reason                                                         | Approved By |
+|-----------|---------|----------------------------------------------------------------|-------------|
+| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main                | AG          |
+| 2/12/2026 | a5a3186 | Created Milestone 2                                            | AG          |
+| 2/12/2026 | a369a02 | Updated Milestone Tracker                                      | AG          |
+| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents                 | AG          |
+| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                                 | AG          |
+| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker                        | AG          |
+| 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine    | JW          |
+| 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property | AG          |
+| 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
