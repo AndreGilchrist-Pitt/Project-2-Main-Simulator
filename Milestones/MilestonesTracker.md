@@ -14,7 +14,7 @@ Target Completion:
   - Status: Finished
 - [x] Milestone 3: Per-Unit Primitive Admittance Matrices
   - Target Date: 2/24/2026
-  - Status: Finished
+  - Status: Finished, checked by Dr. Kerestes
 - [ ] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Not started
@@ -100,20 +100,25 @@ Comments/Notes:
 |------|-----------|-----------------|--------------|------------|-------|
 
 ## Weekly/Check-In Log
-| Date      | Milestone   | Progress Update                                     | Issues/Risks | Next Steps      | Owner |
-|-----------|-------------|-----------------------------------------------------|--------------|-----------------|-------|
-| 2/12/2026 | Milestone 1 | Finished checked by Collin<br/>would like JW review | No issues    |                 | AG    |
-| 2/17/2026 | Milestone 1 | Created a new Milestone1 Branch to submit           | No issues    |                 | AG    |
-| 2/17/2026 | Milestone 2 | Finished checked by Collin                          | No issues    |                 | AG    |
-| 2/19/2026 | Milestone 3 | Misc Merges & Created Milestone 3/4 Info            | No issues    | Update Classes  | AG    |
-| 2/22/2026 | Milestone 3 | Implemented calc_yprim for Transformer and TransmissionLine | No issues |  | AG    |
+| Date      | Milestone   | Progress Update                                                | Issues/Risks | Next Steps      | Owner |
+|-----------|-------------|----------------------------------------------------------------|--------------|-----------------|----|
+| 2/12/2026 | Milestone 1 | Finished checked by Collin<br/>would like JW review            | No issues    |                 | AG |
+| 2/17/2026 | Milestone 1 | Created a new Milestone1 Branch to submit                      | No issues    |                 | AG |
+| 2/17/2026 | Milestone 2 | Finished checked by Collin                                     | No issues    |                 | AG |
+| 2/19/2026 | Milestone 3 | Misc Merges & Created Milestone 3/4 Info                       | No issues    | Update Classes  | AG |
+| 2/22/2026 | Milestone 3 | Implemented calc_yprim for Transformer and TransmissionLine    | No issues    |  | JW |
+| 2/23/2026 | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
+| 2/24/2026 | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
 
 ## Change Log
-| Date      | Change  | Reason                                          | Approved By |
-|-----------|---------|-------------------------------------------------|-------------|
-| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main | AG          |
-| 2/12/2026 | a5a3186 | Created Milestone 2                             | AG          |
-| 2/12/2026 | a369a02 | Updated Milestone Tracker                       | AG          |
-| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents  | AG          |
-| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                  | AG          |
-| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker         | AG          |
+| Date      | Change  | Reason                                                         | Approved By |
+|-----------|---------|----------------------------------------------------------------|-------------|
+| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main                | AG          |
+| 2/12/2026 | a5a3186 | Created Milestone 2                                            | AG          |
+| 2/12/2026 | a369a02 | Updated Milestone Tracker                                      | AG          |
+| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents                 | AG          |
+| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                                 | AG          |
+| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker                        | AG          |
+| 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine    | JW          |
+| 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property | AG          |
+| 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
