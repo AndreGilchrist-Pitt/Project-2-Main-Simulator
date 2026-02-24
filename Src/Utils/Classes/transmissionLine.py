@@ -30,10 +30,21 @@ class TransmissionLine:
         self.x = x
         self.g = g
         self.b = b
-        # Series admittance: Yseries = 1/(r + jx), per-unit values
-        self.Yseries = 1 / (r + 1j * x)
-        # Shunt admittance: Yshunt = g + jb, per-unit values
-        self.Yshunt = g + 1j * b
+        self._yseries = self._calc_Yseries()
+        self._yshunt = self._calc_Yshunt()
+
+    # Series admittance: Yseries = 1/(r + jx), per-unit values
+    def _calc_Yseries(self):
+        return 1 / (self.r + 1j * self.x)
+    # Shunt admittance: Yshunt = g + jb, per-unit values
+    def _calc_Yshunt(self):
+        return self.g + 1j * self.b
+    @property
+    def Yseries(self) -> complex:
+        return self._yseries
+    @property
+    def Yshunt(self) -> complex:
+        return self._yshunt
 
     def calc_yprim(self) -> pd.DataFrame:
         """
@@ -69,3 +80,4 @@ if __name__ == "__main__":
 
     print("\nPrimitive admittance matrix:")
     print(line1.calc_yprim())
+    print()
