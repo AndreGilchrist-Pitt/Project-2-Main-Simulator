@@ -45,42 +45,66 @@ class Circuit:
                         if a connected bus has a zero diagonal entry,
                         or if Ybus is not symmetric.
         """
-        # Initialize the Ybus Matrix
-        N = len(self.buses)
+        N = len(self.buses) # NxN Ybus Matrix
         self.ybus = np.zeros((N, N), dtype=complex)
-
-        # Establish Bus Index Mapping
         bus_index = {name: idx for idx, name in enumerate(self.buses)}
 
-        # Iterate Through All Power Delivery Elements
-        elements = list(self.transformers.values()) + list(self.transmission_lines.values())
+        # Collect all power delivery elements
+        pd_elements = list(self.transformers.values()) + list(self.transmission_lines.values())
 
-        # Stamp the Primitive Matrix into Ybus
-        for element in elements:
+        # Cache each element's yprim so we don't compute it twice
+        element_yprims = []
+        for element in pd_elements:
             yprim = element.calc_yprim()
-            bus_names = list(yprim.index)
+            element_yprims.append((element, yprim))
 
-            for bname in bus_names:
-                if bname not in bus_index:
-                    raise ValueError(f"Element '{element.name}' references bus '{bname}' not in circuit")
-            indices = [bus_index[b] for b in bus_names]
+        # --- Validation: check that every referenced bus exists ---
+        for element, yprim in element_yprims:
+            for bus_name in yprim.index:
+                if bus_name not in bus_index:
+                    raise ValueError(
+                        f"Element '{element.name}' references bus '{bus_name}' not in circuit")
 
-            for r,row_bus in enumerate(bus_names):
-                for c,col_bus in enumerate(bus_names):
-                    i = indices[r]
-                    j = indices[c]
-                    self.ybus[i,j] += yprim.loc[row_bus,col_bus]
-        # Numerical Consistency Check
+        # --- Stamp each primitive matrix into Ybus ---
+        # Updates Ybus with Yprim elements
+
+        for element, yprim in element_yprims:
+            indices = [bus_index[b] for b in yprim.index]
+            # Use numpy advanced indexing to stamp the full 2×2 block at once
+            ix = np.ix_(indices, indices)
+            self.ybus[ix] += yprim.values
+
+        # --- Post-assembly consistency checks ---
+        # Check that all connected buses have non-zero diagonal entries
+        # This builds a set of only the buses that have at least one element connected to them.
+        # If isolated bus (no transformer or line), it would not appear because an isolated bus has a legitimately zero diagonal.
+
         connected_buses = set()
-        for element in elements:
-            connected_buses.update(list(element.calc_yprim().index))
+        for _, yprim in element_yprims:
+            connected_buses.update(yprim.index)
 
-        for bname in connected_buses:
-            idx = bus_index[bname]
-            if self.ybus[idx,idx] == 0:
-                raise ValueError(f"Bus '{bname}' has a zero diagonal entry in Ybus")
+        # For each connected bus, it checks whether the diagonal entry Ybus[i,i] is zero.
+        # The diagonal of Ybus represents the self-admittance — the sum of all admittances connected to that bus.
+        # If a bus has elements connected to it but its diagonal is still zero, something went wrong during stamping (a bug, or pathological element values that cancel out exactly).
+
+        for bus_name in connected_buses:
+            idx = bus_index[bus_name]
+            if self.ybus[idx, idx] == 0:
+                raise ValueError(f"Bus '{bus_name}' has a zero diagonal entry in Ybus")
+
+        # This checks that Ybus equals its own transpose (within a floating-point tolerance of 1e-10).
+        # Since every individual yprim is symmetric, and stamping adds them into matching [i,j] and [j,i] positions, the final Ybus must be symmetric.
+        # If it's not, it means there's a bug in the stamping logic or in one of the calc_yprim() methods.
+        # np.allclose is used instead of == because complex floating-point arithmetic can introduce tiny rounding errors (e.g., 1e-16 differences)
+
         if not np.allclose(self.ybus, self.ybus.T, atol=1e-10):
             raise ValueError("Ybus is not symmetric")
+
+        # Summary
+        # Check             What it catches                                     Why it matters
+        # Zero diagonal     A connected bus with no net self-admittance         Indicates a stamping bug or degenerate element values
+        # Symmetry          Ybus[i,j] ≠ Ybus[j,i]                               All bilateral elements produce symmetric yprim, so asymmetry = a bug
+
 
     def add_bus(self, name: str, nominal_kv: float):
         """
@@ -290,14 +314,25 @@ if __name__ == "__main__":
     c.calc_ybus()
 
     # Display results
-    print("Calculated Ybus Matrix:")
-    print(f"{'':>8}", end="")
-    for i in range(5):
-        print(f"{'Bus' + str(i + 1):>20}", end="")
+    print("\nCalculated Ybus Matrix:\n")
+    bus_names = list(c.buses.keys())
+    col_width = 22
+
+    # Header row
+    print(f"{'':>{col_width}}", end="")
+    for name in bus_names:
+        print(f"{name:>{col_width}}", end="")
     print()
 
+    # Separator
+    print("-" * (col_width * (len(bus_names) + 1)))
+
+    # Data rows
     for i, row in enumerate(c.ybus):
-        print(f"{'Bus' + str(i + 1):>8}", end="")
+        print(f"{bus_names[i]:>{col_width}}", end="")
         for val in row:
-            print(f"  {val.real:+8.4f}{val.imag:+8.4f}j", end="")
+            if val == 0:
+                print(f"{'0':>{col_width}}", end="")
+            else:
+                print(f"{val.real:+9.4f}{val.imag:+9.4f}j".rjust(col_width), end="")
         print()
