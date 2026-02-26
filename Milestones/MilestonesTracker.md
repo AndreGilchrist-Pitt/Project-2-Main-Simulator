@@ -15,9 +15,9 @@ Target Completion:
 - [x] Milestone 3: Per-Unit Primitive Admittance Matrices
   - Target Date: 2/24/2026
   - Status: Finished, checked by Dr. Kerestes
-- [ ] Milestone 4: Ybus Admittance Matrix
+- [x] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
-  - Status: Not started
+  - Status: Finished, checked by Dr. Kerestes
 
 ## Milestone Details
 ### Milestone 1: Creating Equipment Classes
@@ -94,10 +94,11 @@ Comments/Notes:
 
 ### Milestone 4: Ybus Admittance Matrix
 
-- [ ] Extending the Circuit Class
+- [x] Extending the Circuit Class
 
-| Date | Milestone | Progress Update | Issues/Risks | Next Steps | Owner |
-|------|-----------|-----------------|--------------|------------|-------|
+| Date      | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|-----------------|--------------|------------|-------|
+| 2/26/2026 | Milestone 4 | calc_ybus       | No issues | JW Review  | AG |
 
 ## Weekly/Check-In Log
 | Date      | Milestone   | Progress Update                                                | Issues/Risks | Next Steps      | Owner |
@@ -123,3 +124,4 @@ Comments/Notes:
 | 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property | AG          |
 | 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
 | 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                 | AG          |
+| 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                 | AG          |
