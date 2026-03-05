@@ -40,6 +40,7 @@ The `Paths/paths.py` file defines centralized path constants for the project:
 
 - `PROJECT_ROOT`: Root directory of the project
 - `SRC_DIR`: Source code directory (`Src/`)
+- `MAIN_FILE`: Main entry point (`Src/main.py`)
 - `UTILS_DIR`: Utilities directory (`Src/Utils/`)
 - `CLASSES_DIR`: Classes directory (`Src/Utils/Classes/`)
 - `CLASS_DIAGRAMS_DIR`: Class diagrams directory (`Src/Utils/ClassDiagrams/`)
