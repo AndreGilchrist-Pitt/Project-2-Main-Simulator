@@ -111,6 +111,7 @@ Comments/Notes:
 | 2/23/2026 | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
 | 2/24/2026 | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
 | 2/24/2026 | Milestone 4 | Update to Milestone 4 introduced calc_ybus                     | None         |  | AG |
+| 3/5/2026  | Misc        | Per Dr. Kerestes (update to include a main)                    | None         |  | AG |
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
 |-----------|---------|----------------------------------------------------------------|-------------|
@@ -125,3 +126,4 @@ Comments/Notes:
 | 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
 | 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                 | AG          |
 | 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                 | AG          |
+| 3/5/2026  | f831176 | Update to include main.py                                      | AG          |
