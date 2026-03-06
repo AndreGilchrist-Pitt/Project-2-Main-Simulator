@@ -18,6 +18,9 @@ Target Completion:
 - [x] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Finished, checked by Dr. Kerestes
+- [ ] Milestone 5: Settings Class, Bus Refactoring,  Generator & Load Classes
+  - Target Date: 3/4/2026
+  - Status: in progress
 
 ## Milestone Details
 ### Milestone 1: Creating Equipment Classes
@@ -100,6 +103,17 @@ Comments/Notes:
 |-----------|-------------|-----------------|--------------|------------|-------|
 | 2/26/2026 | Milestone 4 | calc_ybus       | No issues | JW Review  | AG |
 
+### Milestone 5:  Settings Class, Bus Refactoring, Generator & Load Classes
+
+- [] System Settings Class
+- [] Refactor Bus Class
+- [] Refactor Generator Class
+- [] Refactor Load Class
+
+| Date     | Milestone   | Progress Update                   | Issues/Risks | Next Steps | Owner |
+|----------|-------------|-----------------------------------|-----------|------------|-------|
+| 3/x/2026 | Milestone 5 | JW Updates                        |  |            |       |
+| 3/6/2026 | Milestone 5 | Refactor Bus,Generator,Load class |  | JW Review  | AG    |
 ## Weekly/Check-In Log
 | Date      | Milestone   | Progress Update                                                | Issues/Risks | Next Steps      | Owner |
 |-----------|-------------|----------------------------------------------------------------|--------------|-----------------|----|
@@ -112,6 +126,7 @@ Comments/Notes:
 | 2/24/2026 | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
 | 2/24/2026 | Milestone 4 | Update to Milestone 4 introduced calc_ybus                     | None         |  | AG |
 | 3/5/2026  | Misc        | Per Dr. Kerestes (update to include a main)                    | None         |  | AG |
+| 3/6/2026  | Milestone 5 | Big updates for milestone 5                                    | None         |  | AG |
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
 |-----------|---------|----------------------------------------------------------------|-------------|
@@ -127,3 +142,4 @@ Comments/Notes:
 | 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                 | AG          |
 | 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                 | AG          |
 | 3/5/2026  | f831176 | Update to include main.py                                      | AG          |
+| 3/6/2026  | 67851cc | Updates for milestone 5                                        | AG          |
