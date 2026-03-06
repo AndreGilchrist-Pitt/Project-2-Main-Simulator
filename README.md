@@ -46,5 +46,5 @@ The `Paths/paths.py` file defines centralized path constants for the project:
 - `CLASS_DIAGRAMS_DIR`: Class diagrams directory (`Src/Utils/ClassDiagrams/`)
 - `UNITTEST_DIR`: Unit test directory (`UnitTest/`)
 - `UNITTEST_CLASSES_DIR`: Unit test classes directory (`UnitTest/Classes/`)
-
+- `MILESTONE_VALIDATION_HELP_DIR`: Milestone validation helper directory (`MilestoneValidationHelp/`)  
 Use these path constants in your code to ensure consistent file paths across the project.

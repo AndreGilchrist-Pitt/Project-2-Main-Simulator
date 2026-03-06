@@ -1,3 +1,5 @@
+from Src.Utils.Classes.settings import Settings
+
 class Generator:
     """
     Represents a generator in a power system network.
@@ -6,7 +8,7 @@ class Generator:
     while producing active power.
     """
 
-    def __init__(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float):
+    def __init__(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float, settings: Settings = None):
         """
         Initialize a Generator instance.
 
@@ -20,10 +22,21 @@ class Generator:
         self.bus1_name = bus1_name
         self.voltage_setpoint = voltage_setpoint
         self.mw_setpoint = mw_setpoint
+        self.settings = settings
+        self.p: float = self.calc_p()
+
+    def calc_p(self) -> float:
+        """
+        Calculate generator active power in per-unit.
+        """
+        return self.mw_setpoint / self.settings.sbase
 
     def __repr__(self):
-        return (f"Generator(name='{self.name}', bus='{self.bus1_name}', "
-                f"v_setpoint={self.voltage_setpoint}, mw={self.mw_setpoint})")
+        return (
+            f"Generator(name='{self.name}', bus='{self.bus1_name}', "
+            f"voltage_setpoint={self.voltage_setpoint}, mw_setpoint={self.mw_setpoint}, "
+            f"p={self.p})"
+        )
 
 
 if __name__ == "__main__":

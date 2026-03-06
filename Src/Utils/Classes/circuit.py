@@ -5,7 +5,7 @@ from Src.Utils.Classes.transformer import Transformer
 from Src.Utils.Classes.transmissionLine import TransmissionLine
 from Src.Utils.Classes.generator import Generator
 from Src.Utils.Classes.load import Load
-
+from Src.Utils.Classes.settings import Settings
 
 class Circuit:
     """
@@ -15,7 +15,7 @@ class Circuit:
     (buses, transformers, transmission lines, generators, and loads).
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, settings: Settings = None):
         """
         Initialize a Circuit instance.
 
@@ -29,6 +29,7 @@ class Circuit:
         self.generators = {}
         self.loads = {}
         self.ybus = None
+        self.settings = settings if settings is not None else Settings()
 
     def calc_ybus(self):
         """
@@ -106,7 +107,7 @@ class Circuit:
         # Symmetry          Ybus[i,j] ≠ Ybus[j,i]                               All bilateral elements produce symmetric yprim, so asymmetry = a bug
 
 
-    def add_bus(self, name: str, nominal_kv: float):
+    def add_bus(self, name: str, nominal_kv: float,vpu:float = 1.0,delta:float = 0.0,bus_type: str = None):
         """
         Add a bus to the circuit.
 
@@ -120,7 +121,7 @@ class Circuit:
         if name in self.buses:
             raise ValueError(f"Bus '{name}' already exists in the circuit")
 
-        bus = Bus(name, nominal_kv)
+        bus = Bus(name, nominal_kv,vpu=vpu,delta=delta, bus_type=bus_type)
         self.buses[name] = bus
 
     def add_transformer(self, name: str, bus1_name: str, bus2_name: str, r: float, x: float):
@@ -182,7 +183,7 @@ class Circuit:
         if name in self.generators:
             raise ValueError(f"Generator '{name}' already exists in the circuit")
 
-        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint)
+        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint, self.settings)
         self.generators[name] = generator
 
     def add_load(self, name: str, bus1_name: str, mw: float, mvar: float):
@@ -201,7 +202,7 @@ class Circuit:
         if name in self.loads:
             raise ValueError(f"Load '{name}' already exists in the circuit")
 
-        load = Load(name, bus1_name, mw, mvar)
+        load = Load(name, bus1_name, mw, mvar, self.settings)
         self.loads[name] = load
 
 

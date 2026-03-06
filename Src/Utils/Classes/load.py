@@ -1,3 +1,5 @@
+from Src.Utils.Classes.settings import Settings
+
 class Load:
     """
     Represents a load in a power system network.
@@ -6,7 +8,7 @@ class Load:
     and reactive power (MVAR).
     """
 
-    def __init__(self, name: str, bus1_name: str, mw: float, mvar: float):
+    def __init__(self, name: str, bus1_name: str, mw: float, mvar: float, settings: Settings):
         """
         Initialize a Load instance.
 
@@ -15,15 +17,32 @@ class Load:
             bus1_name: Name of the bus where the load is connected
             mw: Active power consumption in megawatts (MW)
             mvar: Reactive power consumption in megavars (MVAR)
+            settings: Shared system-wide settings object
         """
         self.name = name
         self.bus1_name = bus1_name
         self.mw = mw
         self.mvar = mvar
+        self.settings = settings
+        self.p = self.calc_p()
+        self.q = self.calc_q()
+    def calc_p(self) -> float:
+        """
+        Calculate active power in per-unit.
+        """
+        return self.mw / self.settings.sbase
+
+    def calc_q(self) -> float:
+        """
+        Calculate reactive power in per-unit.
+        """
+        return self.mvar / self.settings.sbase
 
     def __repr__(self):
-        return (f"Load(name='{self.name}', bus='{self.bus1_name}', "
-                f"mw={self.mw}, mvar={self.mvar})")
+        return (
+            f"Load(name='{self.name}', bus='{self.bus1_name}', "
+            f"mw={self.mw}, mvar={self.mvar}, p={self.p}, q={self.q})"
+        )
 
 
 if __name__ == "__main__":
