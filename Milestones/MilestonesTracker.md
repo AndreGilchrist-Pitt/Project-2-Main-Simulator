@@ -151,4 +151,4 @@ Comments/Notes:
 | 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                 | AG          |
 | 3/5/2026  | f831176 | Update to include main.py                                      | AG          |
 | 3/6/2026  | 67851cc | Updates for milestone 5                                        | AG          |
-| 3/6/2026  | 8c2617b | Updates for milestone 6                                        | AG          |
+| 3/13/2026 | 8c2617b | Updates for milestone 6                                        | AG          |
