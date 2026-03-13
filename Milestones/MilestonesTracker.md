@@ -18,9 +18,9 @@ Target Completion:
 - [x] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Finished, checked by Dr. Kerestes
-- [ ] Milestone 5: Settings Class, Bus Refactoring,  Generator & Load Classes
+- [x] Milestone 5: Settings Class, Bus Refactoring,  Generator & Load Classes
   - Target Date: 3/4/2026
-  - Status: in progress
+  - Status: Finished, waiting for check
 
 ## Milestone Details
 ### Milestone 1: Creating Equipment Classes
@@ -105,10 +105,17 @@ Comments/Notes:
 
 ### Milestone 5:  Settings Class, Bus Refactoring, Generator & Load Classes
 
-- [] System Settings Class
-- [] Refactor Bus Class
-- [] Refactor Generator Class
-- [] Refactor Load Class
+- [x] System Settings Class
+- [x] Refactor Bus Class
+- [x] Refactor Generator Class
+- [x] Refactor Load Class
+
+### Milestone 6:  Power Injection Equations and Newton-Raphson Initialization
+
+- [x] System Settings Class
+- [x] Refactor Bus Class
+- [x] Refactor Generator Class
+- [x] Refactor Load Class
 
 | Date     | Milestone   | Progress Update                   | Issues/Risks | Next Steps | Owner |
 |----------|-------------|-----------------------------------|-----------|------------|-------|

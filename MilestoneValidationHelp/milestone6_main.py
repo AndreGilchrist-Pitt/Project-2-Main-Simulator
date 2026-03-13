@@ -35,5 +35,6 @@ circuit.calc_ybus()
 circuit.vector_voltage_injection
 circuit.vector_current_injection
 Voltages = circuit.vector_voltage_injection
-circuit.compute_power_injection(circuit.buses["Bus1"], voltages=Voltages)
+P,Q = circuit.compute_power_injection(circuit.buses["Bus1"], voltages=Voltages)
+
 print()

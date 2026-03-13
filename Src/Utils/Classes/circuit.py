@@ -222,13 +222,69 @@ class Circuit:
     @property
     def vector_current_injection(self):
         return self._current_injection()
+    def _real_power_injection(self,bus:Bus,voltages) -> float:
+        """
+                    Compute real power injection at a bus using the polar form.
+
+                    Pi = |Vi| * sum_j( |Vj| * (Gij*cos(δij) + Bij*sin(δij)) )
+
+                    Args:
+                        bus: The Bus object at which to compute Pi
+                        voltages: Complex voltage vector (per-unit)
+
+                    Returns:
+                        P_i: Real power injection in per-unit
+                    """
+        i = bus.bus_index
+        V_i = np.abs(voltages[i])
+        delta_i = np.angle(voltages[i])
+
+        P_i = 0.0
+        for j in range(len(voltages)):
+            V_j = np.abs(voltages[j])
+            delta_ij = delta_i - np.angle(voltages[j])
+            G_ij = self.ybus[i, j].real
+            B_ij = self.ybus[i, j].imag
+            P_i += V_j * (G_ij * np.cos(delta_ij) + B_ij * np.sin(delta_ij))
+
+        return V_i * P_i
+    def _reactive_power_injection(self,bus:Bus,voltages) -> float:
+        """
+                    Compute reactive power injection at a bus using the polar form.
+
+                    Qi = |Vi| * sum_j( |Vj| * (Gij*sin(δij) - Bij*cos(δij)) )
+
+                    Args:
+                        bus: The Bus object at which to compute Qi
+                        voltages: Complex voltage vector (per-unit)
+
+                    Returns:
+                        Q_i: Reactive power injection in per-unit
+                    """
+        i = bus.bus_index
+        V_i = np.abs(voltages[i])
+        delta_i = np.angle(voltages[i])
+
+        Q_i = 0.0
+        for j in range(len(voltages)):
+            V_j = np.abs(voltages[j])
+            delta_ij = delta_i - np.angle(voltages[j])
+            G_ij = self.ybus[i, j].real
+            B_ij = self.ybus[i, j].imag
+            Q_i += V_j * (G_ij * np.sin(delta_ij) - B_ij * np.cos(delta_ij))
+
+        return V_i * Q_i
     def compute_power_injection(self,bus:Bus,voltages):
-        i = bus.bus_index  # get row index from the Bus object
-        V_i = voltages[i]  # voltage at bus i
-        S_i = V_i * np.conj(self.ybus[i, :] @ voltages)  # Si = Vi * (sum Yij*Vj)*
-        P_i = S_i.real
-        Q_i = S_i.imag
-        return P_i, Q_i  # Pi, Qi
+        """
+                    Compute both real and reactive power injection at a bus.
+
+                    Returns:
+                        (P_i, Q_i): Tuple of real and reactive power in per-unit
+                    """
+        P_i = self._real_power_injection(bus, voltages)
+        Q_i = self._reactive_power_injection(bus, voltages)
+        return P_i, Q_i
+
 
 if __name__ == "__main__":
     # Validation tests from Milestone 2
