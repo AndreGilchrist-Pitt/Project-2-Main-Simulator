@@ -205,6 +205,30 @@ class Circuit:
         load = Load(name, bus1_name, mw, mvar, self.settings)
         self.loads[name] = load
 
+    def _polar_to_rectangular(self):
+        N = len(self.buses)
+        voltage_vector = np.zeros(N, dtype=complex)
+        for idx, bus in enumerate(self.buses):
+            magnitude = self.buses[bus].vpu
+            angle = np.deg2rad(self.buses[bus].delta)
+            voltage_vector[idx] = magnitude * np.exp(1j * angle)
+        return voltage_vector
+    @property
+    def vector_voltage_injection(self):
+        return self._polar_to_rectangular()
+    def _current_injection(self):
+        voltage_vector = self.vector_voltage_injection
+        return self.ybus @ voltage_vector  # I = Ybus * V (matrix-vector multiply)
+    @property
+    def vector_current_injection(self):
+        return self._current_injection()
+    def compute_power_injection(self,bus:Bus,voltages):
+        i = bus.bus_index  # get row index from the Bus object
+        V_i = voltages[i]  # voltage at bus i
+        S_i = V_i * np.conj(self.ybus[i, :] @ voltages)  # Si = Vi * (sum Yij*Vj)*
+        P_i = S_i.real
+        Q_i = S_i.imag
+        return P_i, Q_i  # Pi, Qi
 
 if __name__ == "__main__":
     # Validation tests from Milestone 2
