@@ -1,3 +1,5 @@
+from Src.Utils.Classes.settings import Settings
+
 class Load:
     """
     Represents a load in a power system network.
@@ -20,10 +22,25 @@ class Load:
         self.bus1_name = bus1_name
         self.mw = mw
         self.mvar = mvar
+        self.p = self.calc_p()
+        self.q = self.calc_q()
+    def calc_p(self) -> float:
+        """
+        Calculate active power in per-unit.
+        """
+        return self.mw / Settings.sbase
+
+    def calc_q(self) -> float:
+        """
+        Calculate reactive power in per-unit.
+        """
+        return self.mvar / Settings.sbase
 
     def __repr__(self):
-        return (f"Load(name='{self.name}', bus='{self.bus1_name}', "
-                f"mw={self.mw}, mvar={self.mvar})")
+        return (
+            f"Load(name='{self.name}', bus='{self.bus1_name}', "
+            f"mw={self.mw}, mvar={self.mvar}, p={self.p}, q={self.q})"
+        )
 
 
 if __name__ == "__main__":

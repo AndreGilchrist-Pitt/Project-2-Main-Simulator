@@ -5,7 +5,7 @@ from Src.Utils.Classes.transformer import Transformer
 from Src.Utils.Classes.transmissionLine import TransmissionLine
 from Src.Utils.Classes.generator import Generator
 from Src.Utils.Classes.load import Load
-
+from Src.Utils.Classes.settings import Settings
 
 class Circuit:
     """
@@ -106,7 +106,7 @@ class Circuit:
         # Symmetry          Ybus[i,j] ≠ Ybus[j,i]                               All bilateral elements produce symmetric yprim, so asymmetry = a bug
 
 
-    def add_bus(self, name: str, nominal_kv: float):
+    def add_bus(self, name: str, nominal_kv: float,vpu:float = 1.0,delta:float = 0.0,bus_type: str = None):
         """
         Add a bus to the circuit.
 
@@ -120,7 +120,7 @@ class Circuit:
         if name in self.buses:
             raise ValueError(f"Bus '{name}' already exists in the circuit")
 
-        bus = Bus(name, nominal_kv)
+        bus = Bus(name, nominal_kv,vpu=vpu,delta=delta, bus_type=bus_type)
         self.buses[name] = bus
 
     def add_transformer(self, name: str, bus1_name: str, bus2_name: str, r: float, x: float):
@@ -203,8 +203,6 @@ class Circuit:
 
         load = Load(name, bus1_name, mw, mvar)
         self.loads[name] = load
-
-
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Circuit Class Validation ===\n")
