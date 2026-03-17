@@ -1,14 +1,24 @@
 @startuml
 title Utils Classes (Bus, Generator, Load, Transformer, TransmissionLine, Circuit)
-
+class Settings {
+  +freq : float
+  +sbase : float
+  --
+  +__init__(freq: float = 60.0, sbase: float = 100.0)
+  +__repr__()
+}
 class Bus {
   -_bus_counter : int
   -_bus_registry : dict
+  -_valid_bus_types : dict
   +name : str
   +nominal_kv : float
   +bus_index : int
+  +vpu : float
+  +delta : float
+  +bus_type : str
   --
-  +__init__(name: str, nominal_kv: float)
+  +__init__(name: str, nominal_kv: float, vpu: float = 1.0, delta: float = 0.0, bus_type: str = None)
   +get_bus_index(name: str)
 }
 
@@ -17,8 +27,11 @@ class Generator {
   +bus1_name : str
   +voltage_setpoint : float
   +mw_setpoint : float
+  +settings : Settings
+  +p : float
   --
-  +__init__(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
+  +__init__(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float, settings: Settings = None)
+  +calc_p() : float
   +__repr__()
 }
 
@@ -27,8 +40,13 @@ class Load {
   +bus1_name : str
   +mw : float
   +mvar : float
+  +settings : Settings
+  +p : float
+  +q : float
   --
-  +__init__(name: str, bus1_name: str, mw: float, mvar: float)
+  +__init__(name: str, bus1_name: str, mw: float, mvar: float, settings: Settings)
+  +calc_p() : float
+  +calc_q() : float
   +__repr__()
 }
 
@@ -63,14 +81,16 @@ class TransmissionLine {
 
 class Circuit {
   +name : str
+  +settings : Settings
   +buses : dict
   +transformers : dict
   +transmission_lines : dict
   +generators : dict
   +loads : dict
+  +ybus
   --
-  +__init__(name: str)
-  +add_bus(name: str, nominal_kv: float)
+  +__init__(name: str, settings: Settings = None)
+  +add_bus(name: str, nominal_kv: float, vpu: float = 1.0, delta: float = 0.0, bus_type: str = None)
   +add_transformer(name: str, bus1_name: str, bus2_name: str, r: float, x: float)
   +add_transmission_line(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
   +add_generator(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
@@ -78,11 +98,15 @@ class Circuit {
   +calc_ybus() : void
 }
 
+Circuit "1" *-- "1" Settings : owns
 Circuit "1" *-- "0..*" Bus : contains
 Circuit "1" *-- "0..*" Transformer : contains
 Circuit "1" *-- "0..*" TransmissionLine : contains
 Circuit "1" *-- "0..*" Generator : contains
 Circuit "1" *-- "0..*" Load : contains
+
+Generator "1" --> "1" Settings : uses
+Load "1" --> "1" Settings : uses
 
 Generator "1" --> "1" Bus : connects to\n(bus1_name)
 Load "1" --> "1" Bus : connects to\n(bus1_name)

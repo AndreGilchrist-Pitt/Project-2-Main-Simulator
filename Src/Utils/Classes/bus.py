@@ -1,3 +1,4 @@
+from enum import Enum
 class Bus:
     """
     Represents a bus (node) in a power system network.
@@ -12,7 +13,10 @@ class Bus:
     # Dictionary to track all buses: {name: bus_index}
     _bus_registry = {}
 
-    def __init__(self, name: str, nominal_kv: float):
+    # Valid bus types: label -> type code
+    _valid_bus_types = {"Slack": 0, "PQ": 1, "PV": 2}
+
+    def __init__(self, name: str, nominal_kv: float, vpu: float = 1.0, delta: float = 0.0,bus_type: str = None):
         """
         Initialize a Bus instance.
 
@@ -30,6 +34,11 @@ class Bus:
         # Register this bus in the dictionary
         Bus._bus_registry[self.name] = self.bus_index
 
+        # Milestone 5
+        self.vpu = vpu
+        self.delta = delta
+        self.bus_type = Bus._validate_bus_type(bus_type)
+
     @classmethod
     def get_bus_index(cls, name: str):
         """
@@ -43,13 +52,34 @@ class Bus:
         """
         return cls._bus_registry.get(name)
 
+    @classmethod
+    def _validate_bus_type(cls, bus_type: str) -> str:
+        """
+        Validate a bus type string.
+
+        Args:
+            bus_type: Bus type string (case-insensitive)
+
+        Returns:
+            The matched label string
+
+        Raises:
+            ValueError: If bus_type is None or not valid
+        """
+        if bus_type is None:
+            raise ValueError(f"Bus type must be specified. Valid types: {list(cls._valid_bus_types.keys())}")
+        for label in cls._valid_bus_types:
+            if label.upper() == bus_type.upper():
+                return label
+        raise ValueError(f"Invalid bus type '{bus_type}'. Valid types: {list(cls._valid_bus_types.keys())}")
 
 if __name__ == "__main__":
     # Simple validation test
     print("=== Bus Class Validation ===\n")
 
     # Create buses
-    bus1 = Bus("Bus 1", 20.0)
+    bus1 = Bus("Bus 1", 20.0,bus_type="PV")
+    print(bus1.bus_type)
     bus2 = Bus("Bus 2", 230.0)
     bus3 = Bus("Bus 3", 115.0)
 
