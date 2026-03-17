@@ -114,27 +114,29 @@ Comments/Notes:
 
 - [x] Define Power Injection Equations
 - [x] Implement Real and Reactive Power Calcuations
-- [] Validation
+- [x] Validation
 
 
-| Date      | Milestone   | Progress Update                   | Issues/Risks               | Next Steps | Owner |
-|-----------|-------------|-----------------------------------|----------------------------|------------|-------|
-| 3/13/2026 | Milestone 6 | Initial Update                    |  |   Validation needs completed         | AG    |
+| Date      | Milestone   | Progress Update   | Issues/Risks               | Next Steps                 | Owner |
+|-----------|-------------|-------------------|----------------------------|----------------------------|-------|
+| 3/13/2026 | Milestone 6 | Initial Update    |  | Validation needs completed | AG    |
+| 3/17/2026 | Milestone 6 | Updated Functions |  | JW Review                  | AG    |
 
 ## Weekly/Check-In Log
-| Date       | Milestone   | Progress Update                                                | Issues/Risks | Next Steps      | Owner |
-|------------|-------------|----------------------------------------------------------------|--------------|-----------------|----|
-| 2/12/2026  | Milestone 1 | Finished checked by Collin<br/>would like JW review            | No issues    |                 | AG |
-| 2/17/2026  | Milestone 1 | Created a new Milestone1 Branch to submit                      | No issues    |                 | AG |
-| 2/17/2026  | Milestone 2 | Finished checked by Collin                                     | No issues    |                 | AG |
-| 2/19/2026  | Milestone 3 | Misc Merges & Created Milestone 3/4 Info                       | No issues    | Update Classes  | AG |
-| 2/22/2026  | Milestone 3 | Implemented calc_yprim for Transformer and TransmissionLine    | No issues    |  | JW |
-| 2/23/2026  | Milestone 3 | Reviewed JW updates. Updated Yseries and Yshunt with @property | None         |  | AG |
-| 2/24/2026  | Milestone 3 | Update to Milestone 3 and checked off by Dr. Kerestes          | None         |  | AG |
-| 2/24/2026  | Milestone 4 | Update to Milestone 4 introduced calc_ybus                     | None         |  | AG |
-| 3/5/2026   | Misc        | Per Dr. Kerestes (update to include a main)                    | None         |  | AG |
-| 3/6/2026   | Milestone 5 | Big updates for milestone 5                                    | None         |  | AG |
-| 3/132/2026 | Milestone 6 | Initial Milestone 6                                            | None         |  | AG |
+| Date      | Milestone       | Progress Update                                                                                 | Issues/Risks | Next Steps      | Owner |
+|-----------|-----------------|-------------------------------------------------------------------------------------------------|--------------|-----------------|----|
+| 2/12/2026 | Milestone 1     | Finished checked by Collin<br/>would like JW review                                             | No issues    |                 | AG |
+| 2/17/2026 | Milestone 1     | Created a new Milestone1 Branch to submit                                                       | No issues    |                 | AG |
+| 2/17/2026 | Milestone 2     | Finished checked by Collin                                                                      | No issues    |                 | AG |
+| 2/19/2026 | Milestone 3     | Misc Merges & Created Milestone 3/4 Info                                                        | No issues    | Update Classes  | AG |
+| 2/22/2026 | Milestone 3     | Implemented calc_yprim for Transformer and TransmissionLine                                     | No issues    |  | JW |
+| 2/23/2026 | Milestone 3     | Reviewed JW updates. Updated Yseries and Yshunt with @property                                  | None         |  | AG |
+| 2/24/2026 | Milestone 3     | Update to Milestone 3 and checked off by Dr. Kerestes                                           | None         |  | AG |
+| 2/24/2026 | Milestone 4     | Update to Milestone 4 introduced calc_ybus                                                      | None         |  | AG |
+| 3/5/2026  | Misc            | Per Dr. Kerestes (update to include a main)                                                     | None         |  | AG |
+| 3/6/2026  | Milestone 5     | Big updates for milestone 5                                                                     | None         |  | AG |
+| 3/13/2026 | Milestone 6     | Initial Milestone 6                                                                             | None         |  | AG |
+| 3/17/2026 | Milestone 5 & 6 | Updated Milestone 5 (Merged to Main and Milestone5 branch) and 6. Settings Class was refactored | None         |  | AG |
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
 |-----------|---------|----------------------------------------------------------------|-------------|
@@ -152,3 +154,4 @@ Comments/Notes:
 | 3/5/2026  | f831176 | Update to include main.py                                      | AG          |
 | 3/6/2026  | 67851cc | Updates for milestone 5                                        | AG          |
 | 3/13/2026 | 8c2617b | Updates for milestone 6                                        | AG          |
+| 3/17/2026 | 5bead86 | Updates for milestone 5 settings class and Milestone 6         | AG          |
