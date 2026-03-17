@@ -15,7 +15,7 @@ class Circuit:
     (buses, transformers, transmission lines, generators, and loads).
     """
 
-    def __init__(self, name: str, settings: Settings = None):
+    def __init__(self, name: str):
         """
         Initialize a Circuit instance.
 
@@ -29,7 +29,6 @@ class Circuit:
         self.generators = {}
         self.loads = {}
         self.ybus = None
-        self.settings = settings if settings is not None else Settings()
 
     def calc_ybus(self):
         """
@@ -183,7 +182,7 @@ class Circuit:
         if name in self.generators:
             raise ValueError(f"Generator '{name}' already exists in the circuit")
 
-        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint, self.settings)
+        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint)
         self.generators[name] = generator
 
     def add_load(self, name: str, bus1_name: str, mw: float, mvar: float):
@@ -202,90 +201,8 @@ class Circuit:
         if name in self.loads:
             raise ValueError(f"Load '{name}' already exists in the circuit")
 
-        load = Load(name, bus1_name, mw, mvar, self.settings)
+        load = Load(name, bus1_name, mw, mvar)
         self.loads[name] = load
-
-    def _polar_to_rectangular(self):
-        N = len(self.buses)
-        voltage_vector = np.zeros(N, dtype=complex)
-        for idx, bus in enumerate(self.buses):
-            magnitude = self.buses[bus].vpu
-            angle = np.deg2rad(self.buses[bus].delta)
-            voltage_vector[idx] = magnitude * np.exp(1j * angle)
-        return voltage_vector
-    @property
-    def vector_voltage_injection(self):
-        return self._polar_to_rectangular()
-    def _current_injection(self):
-        voltage_vector = self.vector_voltage_injection
-        return self.ybus @ voltage_vector  # I = Ybus * V (matrix-vector multiply)
-    @property
-    def vector_current_injection(self):
-        return self._current_injection()
-    def _real_power_injection(self,bus:Bus,voltages) -> float:
-        """
-                    Compute real power injection at a bus using the polar form.
-
-                    Pi = |Vi| * sum_j( |Vj| * (Gij*cos(δij) + Bij*sin(δij)) )
-
-                    Args:
-                        bus: The Bus object at which to compute Pi
-                        voltages: Complex voltage vector (per-unit)
-
-                    Returns:
-                        P_i: Real power injection in per-unit
-                    """
-        i = bus.bus_index
-        V_i = np.abs(voltages[i])
-        delta_i = np.angle(voltages[i])
-
-        P_i = 0.0
-        for j in range(len(voltages)):
-            V_j = np.abs(voltages[j])
-            delta_ij = delta_i - np.angle(voltages[j])
-            G_ij = self.ybus[i, j].real
-            B_ij = self.ybus[i, j].imag
-            P_i += V_j * (G_ij * np.cos(delta_ij) + B_ij * np.sin(delta_ij))
-
-        return V_i * P_i
-    def _reactive_power_injection(self,bus:Bus,voltages) -> float:
-        """
-                    Compute reactive power injection at a bus using the polar form.
-
-                    Qi = |Vi| * sum_j( |Vj| * (Gij*sin(δij) - Bij*cos(δij)) )
-
-                    Args:
-                        bus: The Bus object at which to compute Qi
-                        voltages: Complex voltage vector (per-unit)
-
-                    Returns:
-                        Q_i: Reactive power injection in per-unit
-                    """
-        i = bus.bus_index
-        V_i = np.abs(voltages[i])
-        delta_i = np.angle(voltages[i])
-
-        Q_i = 0.0
-        for j in range(len(voltages)):
-            V_j = np.abs(voltages[j])
-            delta_ij = delta_i - np.angle(voltages[j])
-            G_ij = self.ybus[i, j].real
-            B_ij = self.ybus[i, j].imag
-            Q_i += V_j * (G_ij * np.sin(delta_ij) - B_ij * np.cos(delta_ij))
-
-        return V_i * Q_i
-    def compute_power_injection(self,bus:Bus,voltages):
-        """
-                    Compute both real and reactive power injection at a bus.
-
-                    Returns:
-                        (P_i, Q_i): Tuple of real and reactive power in per-unit
-                    """
-        P_i = self._real_power_injection(bus, voltages)
-        Q_i = self._reactive_power_injection(bus, voltages)
-        return P_i, Q_i
-
-
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Circuit Class Validation ===\n")

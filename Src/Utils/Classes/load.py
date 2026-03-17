@@ -8,7 +8,7 @@ class Load:
     and reactive power (MVAR).
     """
 
-    def __init__(self, name: str, bus1_name: str, mw: float, mvar: float, settings: Settings):
+    def __init__(self, name: str, bus1_name: str, mw: float, mvar: float):
         """
         Initialize a Load instance.
 
@@ -17,26 +17,24 @@ class Load:
             bus1_name: Name of the bus where the load is connected
             mw: Active power consumption in megawatts (MW)
             mvar: Reactive power consumption in megavars (MVAR)
-            settings: Shared system-wide settings object
         """
         self.name = name
         self.bus1_name = bus1_name
         self.mw = mw
         self.mvar = mvar
-        self.settings = settings
         self.p = self.calc_p()
         self.q = self.calc_q()
     def calc_p(self) -> float:
         """
         Calculate active power in per-unit.
         """
-        return self.mw / self.settings.sbase
+        return self.mw / Settings.sbase
 
     def calc_q(self) -> float:
         """
         Calculate reactive power in per-unit.
         """
-        return self.mvar / self.settings.sbase
+        return self.mvar / Settings.sbase
 
     def __repr__(self):
         return (

@@ -9,8 +9,8 @@ from Src.Utils.Classes.settings import Settings
 Bus._bus_counter = 0
 Bus._bus_registry.clear()
 
-settings = Settings(freq=60.0, sbase=100.0)
-circuit = Circuit("Milestone5 Five-Bus Glover Example 6.9", settings)
+Settings(freq=60.0, sbase=100.0)
+circuit = Circuit("Milestone5 Five-Bus Glover Example 6.9")
 
 circuit.add_bus("Bus1", 15.0, vpu=1.0, delta=0.0, bus_type="Slack")
 circuit.add_bus("Bus2", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
@@ -54,7 +54,7 @@ for i, row in enumerate(circuit.ybus):
     print()
 
 print(f"\nCircuit Name: {circuit.name}")
-print(f"Settings: {circuit.settings}\n")
+print(f"Settings: {Settings}\n")
 
 for bus in circuit.buses.values():
     print(
