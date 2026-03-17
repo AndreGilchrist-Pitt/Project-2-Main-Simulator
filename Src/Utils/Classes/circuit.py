@@ -29,7 +29,6 @@ class Circuit:
         self.generators = {}
         self.loads = {}
         self.ybus = None
-
     def calc_ybus(self):
         """
         Compute the system Ybus (nodal admittance) matrix.
@@ -104,8 +103,6 @@ class Circuit:
         # Check             What it catches                                     Why it matters
         # Zero diagonal     A connected bus with no net self-admittance         Indicates a stamping bug or degenerate element values
         # Symmetry          Ybus[i,j] ≠ Ybus[j,i]                               All bilateral elements produce symmetric yprim, so asymmetry = a bug
-
-
     def add_bus(self, name: str, nominal_kv: float,vpu:float = 1.0,delta:float = 0.0,bus_type: str = None):
         """
         Add a bus to the circuit.
@@ -122,7 +119,6 @@ class Circuit:
 
         bus = Bus(name, nominal_kv,vpu=vpu,delta=delta, bus_type=bus_type)
         self.buses[name] = bus
-
     def add_transformer(self, name: str, bus1_name: str, bus2_name: str, r: float, x: float):
         """
         Add a transformer to the circuit.
@@ -142,7 +138,6 @@ class Circuit:
 
         transformer = Transformer(name, bus1_name, bus2_name, r, x)
         self.transformers[name] = transformer
-
     def add_transmission_line(self, name: str, bus1_name: str, bus2_name: str,
                              r: float, x: float, g: float, b: float):
         """
@@ -165,7 +160,6 @@ class Circuit:
 
         line = TransmissionLine(name, bus1_name, bus2_name, r, x, g, b)
         self.transmission_lines[name] = line
-
     def add_generator(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float):
         """
         Add a generator to the circuit.
@@ -184,7 +178,6 @@ class Circuit:
 
         generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint)
         self.generators[name] = generator
-
     def add_load(self, name: str, bus1_name: str, mw: float, mvar: float):
         """
         Add a load to the circuit.
@@ -203,6 +196,139 @@ class Circuit:
 
         load = Load(name, bus1_name, mw, mvar)
         self.loads[name] = load
+    @property
+    def voltage_vector_polar(self):
+        return [(bus.vpu, bus.delta) for bus in self.buses.values()]
+    @property
+    def voltage_vector_rectangular(self):
+        N = len(self.buses)
+        V = np.zeros(N, dtype=complex)
+        for idx, bus in enumerate(self.buses):
+            magnitude = self.buses[bus].vpu
+            angle = np.deg2rad(self.buses[bus].delta)
+            V[idx] = magnitude * np.exp(1j * angle)
+        return V
+
+    def _real_power_injection(self, bus: Bus, ybus, voltages) -> float:
+        """
+        Compute real power injection at a bus using the polar form.
+
+        Pi = |Vi| * sum_j( |Vj| * (Gij*cos(δij) + Bij*sin(δij)) )
+
+        Args:
+            bus: The Bus object at which to compute Pi
+            ybus: System admittance matrix
+            voltages: Complex voltage vector (per-unit)
+
+        Returns:
+            P_i: Real power injection in per-unit
+        """
+        i = bus.bus_index
+        V_i = np.abs(voltages[i])
+        delta_i = np.angle(voltages[i])
+
+        P_i = 0.0
+        for j in range(len(voltages)):
+            V_j = np.abs(voltages[j])
+            delta_ij = delta_i - np.angle(voltages[j])
+            G_ij = ybus[i, j].real
+            B_ij = ybus[i, j].imag
+            P_i += V_j * (G_ij * np.cos(delta_ij) + B_ij * np.sin(delta_ij))
+
+        return V_i * P_i
+    def _reactive_power_injection(self, bus: Bus, ybus, voltages) -> float:
+        """
+        Compute reactive power injection at a bus using the polar form.
+
+        Qi = |Vi| * sum_j( |Vj| * (Gij*sin(δij) - Bij*cos(δij)) )
+
+        Args:
+            bus: The Bus object at which to compute Qi
+            ybus: System admittance matrix
+            voltages: Complex voltage vector (per-unit)
+
+        Returns:
+            Q_i: Reactive power injection in per-unit
+        """
+        i = bus.bus_index
+        V_i = np.abs(voltages[i])
+        delta_i = np.angle(voltages[i])
+
+        Q_i = 0.0
+        for j in range(len(voltages)):
+            V_j = np.abs(voltages[j])
+            delta_ij = delta_i - np.angle(voltages[j])
+            G_ij = ybus[i, j].real
+            B_ij = ybus[i, j].imag
+            Q_i += V_j * (G_ij * np.sin(delta_ij) - B_ij * np.cos(delta_ij))
+
+        return V_i * Q_i
+    def compute_power_injection(self, bus: Bus, ybus, voltages):
+        """
+        Compute both real and reactive power injection at a bus.
+
+        Args:
+            bus: The Bus object at which to compute power
+            ybus: System admittance matrix
+            voltages: Complex voltage vector (per-unit)
+
+        Returns:
+            (P_i, Q_i): Tuple of real and reactive power in per-unit
+        """
+        P_i = self._real_power_injection(bus, ybus, voltages)
+        Q_i = self._reactive_power_injection(bus, ybus, voltages)
+        return P_i, Q_i
+
+    def compute_power_mismatch(self, buses: dict, ybus, voltages) -> list:
+        """
+        Compute the power mismatch vector f for all non-slack buses.
+
+        ΔP_i = P_spec - P_calc  (all non-slack buses)
+        ΔQ_i = Q_spec - Q_calc  (PQ buses only)
+
+        Args:
+            buses: Dictionary of bus objects {name: Bus}
+            ybus: System admittance matrix
+            voltages: Complex voltage vector (per-unit)
+
+        Returns:
+            f: list of mismatches [ΔP (non-slack), ΔQ (PQ only)]
+        """
+        specs = {bus_name: [0.0, 0.0] for bus_name in buses}
+
+        for gen in self.generators.values():
+            specs[gen.bus1_name][0] += gen.p  # add generation
+
+        for load in self.loads.values():
+            specs[load.bus1_name][0] -= load.p  # subtract load P
+            specs[load.bus1_name][1] -= load.q  # subtract load Q
+        print("=== Power Mismatch Calculation ===")
+        print(
+            f"\n{'Bus':<8} {'Type':<7} {'P_spec':>10} {'P_calc':>10} {'ΔP':>10} {'Q_spec':>10} {'Q_calc':>10} {'ΔQ':>10}")
+        print("-" * 75)
+
+        f = []
+
+        for bus in buses.values():
+            if bus.bus_type == "Slack":
+                print(f"{bus.name:<8} {'Slack':<7} {'---':>10} {'---':>10} {'---':>10} {'---':>10} {'---':>10} {'---':>10}")
+                continue  # Slack bus: no mismatch
+
+            P_spec, Q_spec = specs[bus.name]
+            P_calc, Q_calc = self.compute_power_injection(bus, ybus, voltages)
+
+            dP = P_spec - P_calc
+            f.append(dP) # ΔP for all non-slack
+
+            if bus.bus_type == "PQ":
+                dQ = Q_spec - Q_calc
+                f.append(dQ)
+                print(f"{bus.name:<8} {'PQ':<7} {P_spec:>10.4f} {P_calc:>10.4f} {dP:>10.4f} {Q_spec:>10.4f} {Q_calc:>10.4f} {dQ:>10.4f}")
+            else:
+                print(f"{bus.name:<8} {'PV':<7} {P_spec:>10.4f} {P_calc:>10.4f} {dP:>10.4f} {'N/A':>10} {'N/A':>10} {'N/A':>10}")
+        print("-" * 75)
+        print(f"\nMismatch vector f: {[round(v, 6) for v in f]}\n")
+        return f
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Circuit Class Validation ===\n")
