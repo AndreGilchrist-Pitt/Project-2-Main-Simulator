@@ -9,14 +9,14 @@ from Src.Utils.Classes.settings import Settings
 Bus._bus_counter = 0
 Bus._bus_registry.clear()
 
-settings = Settings(freq=60.0, sbase=100.0)
-circuit = Circuit("Milestone5 Five-Bus Glover Example 6.9", settings)
+Settings(freq=60.0, sbase=100.0)
+circuit = Circuit("Milestone5 Five-Bus Glover Example 6.9")
 
-circuit.add_bus("Bus1", 15.0, vpu=1.06, delta=0.0, bus_type="Slack")
-circuit.add_bus("Bus2", 345.0, vpu=1.02, delta=-2.0, bus_type="PQ")
-circuit.add_bus("Bus3", 15.0, vpu=1.01, delta=-3.0, bus_type="PV")
-circuit.add_bus("Bus4", 345.0, vpu=0.99, delta=-5.0, bus_type="PQ")
-circuit.add_bus("Bus5", 345.0, vpu=0.98, delta=-7.0, bus_type="PQ")
+circuit.add_bus("Bus1", 15.0, vpu=1.0, delta=0.0, bus_type="Slack")
+circuit.add_bus("Bus2", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
+circuit.add_bus("Bus3", 15.0, vpu=1.05, delta=0.0, bus_type="PV")
+circuit.add_bus("Bus4", 345.0, vpu=1.0, delta=-0.0, bus_type="PQ")
+circuit.add_bus("Bus5", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
 
 circuit.add_transformer("T1", "Bus1", "Bus5", 0.0015, 0.02)
 circuit.add_transformer("T2", "Bus3", "Bus4", 0.00075, 0.01)
@@ -32,9 +32,10 @@ circuit.add_load("Load2", "Bus2", 800.0, 280.0)
 circuit.add_load("Load3", "Bus3", 80.0, 40.0)
 
 circuit.calc_ybus()
-circuit.vector_voltage_injection
-circuit.vector_current_injection
-Voltages = circuit.vector_voltage_injection
-P,Q = circuit.compute_power_injection(circuit.buses["Bus1"], voltages=Voltages)
-
-print()
+print(circuit.voltage_vector_polar)
+print(circuit.voltage_vector_rectangular)
+Voltages = circuit.voltage_vector_rectangular
+P,Q = circuit.compute_power_injection(circuit.buses["Bus3"], circuit.ybus,voltages=Voltages)
+print(P,Q)
+f = circuit.compute_power_mismatch(circuit.buses, circuit.ybus, Voltages)
+print(f)
