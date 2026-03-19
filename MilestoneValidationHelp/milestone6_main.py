@@ -15,7 +15,7 @@ circuit = Circuit("Milestone5 Five-Bus Glover Example 6.9")
 circuit.add_bus("Bus1", 15.0, vpu=1.0, delta=0.0, bus_type="Slack")
 circuit.add_bus("Bus2", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
 circuit.add_bus("Bus3", 15.0, vpu=1.05, delta=0.0, bus_type="PV")
-circuit.add_bus("Bus4", 345.0, vpu=1.0, delta=-0.0, bus_type="PQ")
+circuit.add_bus("Bus4", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
 circuit.add_bus("Bus5", 345.0, vpu=1.0, delta=0.0, bus_type="PQ")
 
 circuit.add_transformer("T1", "Bus1", "Bus5", 0.0015, 0.02)
@@ -32,10 +32,30 @@ circuit.add_load("Load2", "Bus2", 800.0, 280.0)
 circuit.add_load("Load3", "Bus3", 80.0, 40.0)
 
 circuit.calc_ybus()
-print(circuit.voltage_vector_polar)
-print(circuit.voltage_vector_rectangular)
+print("\nCalculated Ybus Matrix:\n")
+bus_names = list(circuit.buses.keys())
+col_width = 22
+
+print(f"{'':>{col_width}}", end="")
+for name in bus_names:
+    print(f"{name:>{col_width}}", end="")
+print()
+
+print("-" * (col_width * (len(bus_names) + 1)))
+
+for i, row in enumerate(circuit.ybus):
+    print(f"{bus_names[i]:>{col_width}}", end="")
+    for val in row:
+        if val == 0:
+            print(f"{'0':>{col_width}}", end="")
+        else:
+            print(f"{val.real:+9.4f}{val.imag:+9.4f}j".rjust(col_width), end="")
+    print()
+print()
+print(f"Voltage Vector Polar:\n{circuit.voltage_vector_polar}")
+print(f"Voltage Vector Rectangular:\n{circuit.voltage_vector_rectangular}")
 Voltages = circuit.voltage_vector_rectangular
-P,Q = circuit.compute_power_injection(circuit.buses["Bus3"], circuit.ybus,voltages=Voltages)
-print(P,Q)
+P,Q = circuit.compute_power_injection(circuit.buses["Bus2"], circuit.ybus,voltages=Voltages)
+print(f"Power injection at Bus2: {P} kW, {Q} kVar")
 f = circuit.compute_power_mismatch(circuit.buses, circuit.ybus, Voltages)
 print(f)
