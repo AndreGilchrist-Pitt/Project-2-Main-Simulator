@@ -68,7 +68,7 @@ Compute the power mismatches to determine the difference between specified and c
 3. **Ensure Correct Data Handling**
     - Slack bus should have no mismatch
     - PQ buses must include both $\Delta P_{i}$ and $\Delta Q_{i}$
-    - PV buses must only include $\Delta Q_{i}$
+    - PV buses should exclude $\Delta Q_{i}$
 4. **Validation**
     - Verify results using a simple test case with known values
     - Ensure the computed mismatches align with expected values
