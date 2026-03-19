@@ -329,6 +329,13 @@ class Circuit:
         print("-" * 75)
         print(f"\nMismatch vector f: {[round(v, 6) for v in f]}\n")
         return f
+
+    def bus_angles(self):
+        angles = np.array([np.deg2rad(bus.delta) for bus in self.buses.values()])
+        return angles
+    def bus_voltages(self):
+        voltages = np.array([bus.vpu for bus in self.buses.values()])
+        return voltages
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Circuit Class Validation ===\n")
