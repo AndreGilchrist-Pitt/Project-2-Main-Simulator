@@ -9,7 +9,6 @@ import numpy as np
 
 from Src.Utils.Classes.jacobian import Jacobian
 
-
 class PowerFlow:
     """
     Newton–Raphson solver: updates bus angles and PQ voltage magnitudes until
@@ -30,33 +29,9 @@ class PowerFlow:
     def _pq_buses(buses: dict):
         return [b for b in buses.values() if b.bus_type == "PQ"]
 
-    def _mismatch_vector_block_ordered(self, circuit, buses: dict, ybus, voltages) -> np.ndarray:
-        specs = {name: [0.0, 0.0] for name in buses}
-        for gen in circuit.generators.values():
-            specs[gen.bus1_name][0] += gen.p
-        for load in circuit.loads.values():
-            specs[load.bus1_name][0] -= load.p
-            specs[load.bus1_name][1] -= load.q
-
-        p_buses = self._non_slack_buses(buses)
-        pq_buses = self._pq_buses(buses)
-
-        f_list = []
-        for bus in p_buses:
-            p_spec, _ = specs[bus.name]
-            p_calc, _ = circuit.compute_power_injection(bus, ybus, voltages)
-            f_list.append(p_spec - p_calc)
-        for bus in pq_buses:
-            _, q_spec = specs[bus.name]
-            _, q_calc = circuit.compute_power_injection(bus, ybus, voltages)
-            f_list.append(q_spec - q_calc)
-        return np.asarray(f_list, dtype=float)
-
     def mismatch_vector(self, circuit) -> np.ndarray:
         """Block-ordered mismatch f for current bus state (same order as Jacobian rows)."""
-        return self._mismatch_vector_block_ordered(
-            circuit, circuit.buses, circuit.ybus, circuit.voltage_vector_rectangular
-        )
+        return circuit.compute_power_mismatch(circuit.buses, circuit.ybus, circuit.voltage_vector_rectangular)
 
     def solve(self, circuit, tol: float = 0.001, max_iter: int = 50, verbose: bool = False):
         """
@@ -79,7 +54,8 @@ class PowerFlow:
 
         for k in range(max_iter):
             v_complex = circuit.voltage_vector_rectangular
-            f = self._mismatch_vector_block_ordered(circuit, buses, ybus, v_complex)
+            #f = self._mismatch_vector_block_ordered(circuit, buses, ybus, v_complex)
+            f = circuit.compute_power_mismatch(buses, ybus, v_complex)
             self.final_mismatch_max = float(np.max(np.abs(f)))
 
             if verbose:

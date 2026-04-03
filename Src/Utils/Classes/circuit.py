@@ -279,7 +279,7 @@ class Circuit:
         Q_i = self._reactive_power_injection(bus, ybus, voltages)
         return P_i, Q_i
 
-    def compute_power_mismatch(self, buses: dict, ybus, voltages) -> list:
+    def compute_power_mismatch(self, buses: dict, ybus, voltages) -> np.ndarray:
         """
         Compute the power mismatch vector f for all non-slack buses.
 
@@ -302,33 +302,22 @@ class Circuit:
         for load in self.loads.values():
             specs[load.bus1_name][0] -= load.p  # subtract load P
             specs[load.bus1_name][1] -= load.q  # subtract load Q
-        print("=== Power Mismatch Calculation ===")
-        print(
-            f"\n{'Bus':<8} {'Type':<7} {'P_spec':>10} {'P_calc':>10} {'ΔP':>10} {'Q_spec':>10} {'Q_calc':>10} {'ΔQ':>10}")
-        print("-" * 75)
+        non_slack_buses = [b for b in buses.values() if b.bus_type != "Slack"]
+        pq_buses = [b for b in buses.values() if b.bus_type == "PQ"]
 
         f = []
 
-        for bus in buses.values():
-            if bus.bus_type == "Slack":
-                print(f"{bus.name:<8} {'Slack':<7} {'---':>10} {'---':>10} {'---':>10} {'---':>10} {'---':>10} {'---':>10}")
-                continue  # Slack bus: no mismatch
+        for bus in non_slack_buses:
+            p_spec, _ = specs[bus.name]
+            p_calc, _ = self.compute_power_injection(bus, ybus, voltages)
+            f.append(p_spec - p_calc)
 
-            P_spec, Q_spec = specs[bus.name]
-            P_calc, Q_calc = self.compute_power_injection(bus, ybus, voltages)
+        for bus in pq_buses:
+            _, q_spec = specs[bus.name]
+            _, q_calc = self.compute_power_injection(bus, ybus, voltages)
+            f.append(q_spec - q_calc)
 
-            dP = P_spec - P_calc
-            f.append(dP) # ΔP for all non-slack
-
-            if bus.bus_type == "PQ":
-                dQ = Q_spec - Q_calc
-                f.append(dQ)
-                print(f"{bus.name:<8} {'PQ':<7} {P_spec:>10.4f} {P_calc:>10.4f} {dP:>10.4f} {Q_spec:>10.4f} {Q_calc:>10.4f} {dQ:>10.4f}")
-            else:
-                print(f"{bus.name:<8} {'PV':<7} {P_spec:>10.4f} {P_calc:>10.4f} {dP:>10.4f} {'N/A':>10} {'N/A':>10} {'N/A':>10}")
-        print("-" * 75)
-        print(f"\nMismatch vector f: {[round(v, 6) for v in f]}\n")
-        return f
+        return np.asarray(f, dtype=float)
 
     def bus_angles(self):
         angles = np.array([np.deg2rad(bus.delta) for bus in self.buses.values()])

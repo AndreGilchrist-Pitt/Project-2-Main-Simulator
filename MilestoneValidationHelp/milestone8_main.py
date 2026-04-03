@@ -65,10 +65,12 @@ else:
 print("\nFinal bus voltages (p.u.) and angles (deg):")
 for b in circuit.buses.values():
     print(f"  {b.name}: vpu={b.vpu:.6f}, delta={b.delta:.6f}, type={b.bus_type}")
-
+Voltages = circuit.voltage_vector_rectangular
+f = circuit.compute_power_mismatch(circuit.buses, circuit.ybus, Voltages)
 print("\n--- Verification ---")
 f_final = pf.mismatch_vector(circuit)
-max_f = float(np.max(np.abs(f_final)))
+#max_f = float(np.max(np.abs(f_final)))
+max_f = float(np.max(np.abs(f)))
 print(f"  max|f| after solve: {max_f:.6g} p.u.")
 
 J = pf._jac.calculate_jacobian(
