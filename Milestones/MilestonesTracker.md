@@ -18,6 +18,15 @@ Target Completion:
 - [x] Milestone 4: Ybus Admittance Matrix
   - Target Date: 3/1/2026
   - Status: Finished, checked by Dr. Kerestes
+- [x] Milestone 5: Settings Class, Bus Refactoring,  Generator & Load Classes
+  - Target Date: 3/4/2026
+  - Status: Finished, waiting for check
+- [x] Milestone 7: Jacobian Matrix
+  - Target Date: 3/19/2026
+  - Status: Implemented (`Jacobian`, `milestone7_main.py`)
+- [x] Milestone 8: Newton–Raphson Power Flow
+  - Target Date: 3/26/2026
+  - Status: Implemented (`PowerFlow`, `milestone8_main.py`; docs `Milestone8.md`)
 
 ## Milestone Details
 ### Milestone 1: Creating Equipment Classes
@@ -119,6 +128,28 @@ Comments/Notes:
 | 3/13/2026 | Milestone 6 | Initial Update    |  | Validation needs completed | AG    |
 | 3/17/2026 | Milestone 6 | Updated Functions |  | JW Review                  | AG    |
 
+### Milestone 7: Jacobian Matrix
+
+- [x] `Jacobian` class (`Src/Utils/Classes/jacobian.py`)
+- [x] `calculate_jacobian(buses, ybus, angles, voltages)` — J1–J4, full **J**
+- [x] `MilestoneValidationHelp/milestone7_main.py` — five-bus demo
+
+| Date      | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|-----------------|--------------|------------|-------|
+| —         | Milestone 7 | Jacobian + milestone7_main | — | — | — |
+
+### Milestone 8: Newton–Raphson Power Flow
+
+- [x] `PowerFlow` (`Src/Utils/Classes/powerflow.py`)
+- [x] `solve(circuit, tol, max_iter, verbose)` — NR loop, **J·Δx = f**, bus-type updates
+- [x] `mismatch_vector(circuit)` — residual **f** for verification
+- [x] `MilestoneValidationHelp/milestone8_main.py` — five-bus validation + automated checks
+- [x] `Milestones/Milestone8.md` — implementation notes, run instructions, API table
+
+| Date      | Milestone   | Progress Update | Issues/Risks | Next Steps | Owner |
+|-----------|-------------|-----------------|--------------|------------|-------|
+| 3/23/2026 | Milestone 8 | PowerFlow, milestone8_main, Milestone8.md, `.gitignore` (`.vscode/`) | — | Instructor review / PowerWorld optional | — |
+
 ## Weekly/Check-In Log
 | Date      | Milestone       | Progress Update                                                                                 | Issues/Risks | Next Steps      | Owner |
 |-----------|-----------------|-------------------------------------------------------------------------------------------------|--------------|-----------------|----|
@@ -134,6 +165,7 @@ Comments/Notes:
 | 3/6/2026  | Milestone 5     | Big updates for milestone 5                                                                     | None         |  | AG |
 | 3/13/2026 | Milestone 6     | Initial Milestone 6                                                                             | None         |  | AG |
 | 3/17/2026 | Milestone 5 & 6 | Updated Milestone 5 (Merged to Main and Milestone5 branch) and 6. Settings Class was refactored | None         |  | AG |
+| 3/23/2026 | Milestone 8     | Newton–Raphson: `PowerFlow`, `milestone8_main.py`, updated `Milestone8.md` & tracker | None | Push to `Development` | — |
 ## Change Log
 | Date      | Change  | Reason                                                         | Approved By |
 |-----------|---------|----------------------------------------------------------------|-------------|
@@ -152,3 +184,4 @@ Comments/Notes:
 | 3/6/2026  | 67851cc | Updates for milestone 5                                        | AG          |
 | 3/13/2026 | 8c2617b | Updates for milestone 6                                        | AG          |
 | 3/17/2026 | 5bead86 | Updates for milestone 5 settings class and Milestone 6         | AG          |
+| 3/23/2026 | —       | Milestone 8: PowerFlow, milestone8_main, Milestone8.md; tracker (M7+M8 sections, weekly log); `.gitignore` `.vscode/` | —   |

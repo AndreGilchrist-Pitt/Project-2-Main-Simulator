@@ -12,6 +12,9 @@ env/
 # PyCharm
 .idea/
 
+# VS Code / Cursor (local editor settings)
+.vscode/
+
 # Distribution / packaging
 *.egg-info/
 dist/
