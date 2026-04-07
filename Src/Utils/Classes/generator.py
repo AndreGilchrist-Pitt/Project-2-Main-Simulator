@@ -8,7 +8,7 @@ class Generator:
     while producing active power.
     """
 
-    def __init__(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float):
+    def __init__(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float,x_subtransient: float = 0.0):
         """
         Initialize a Generator instance.
 
@@ -22,8 +22,8 @@ class Generator:
         self.bus1_name = bus1_name
         self.voltage_setpoint = voltage_setpoint
         self.mw_setpoint = mw_setpoint
+        self.x_subtransient = x_subtransient
         self.p: float = self.calc_p()
-
     def calc_p(self) -> float:
         """
         Calculate generator active power in per-unit.
@@ -34,7 +34,7 @@ class Generator:
         return (
             f"Generator(name='{self.name}', bus='{self.bus1_name}', "
             f"voltage_setpoint={self.voltage_setpoint}, mw_setpoint={self.mw_setpoint}, "
-            f"p={self.p})"
+            f"p={self.p}, x_subtransient={self.x_subtransient})"
         )
 
 

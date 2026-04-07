@@ -1,5 +1,5 @@
 @startuml
-title Utils Classes (Power system model + NR power flow)
+title Utils Classes (Power system model + NR power flow + Fault Analysis)
 
 class Settings {
   +freq : float
@@ -29,9 +29,10 @@ class Generator {
   +bus1_name : str
   +voltage_setpoint : float
   +mw_setpoint : float
+  +x_subtransient : float
   +p : float
   --
-  +__init__(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float)
+  +__init__(name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float, x_subtransient: float = 0.0)
   +calc_p() : float
   +__repr__()
 }
@@ -95,12 +96,16 @@ class Circuit {
   +add_generator(...)
   +add_load(...)
   +calc_ybus() : void
+  +calc_ybus_fault() : ndarray
+  +calc_zbus(ybus_fault) : ndarray
+  +calc_fault_current(zbus, faulted_bus_name, prefault_voltage) : complex
+  +calc_fault_voltages(zbus, faulted_bus_name, prefault_voltage) : dict
   +voltage_vector_polar : property
   +voltage_vector_rectangular : property
   +bus_angles() : ndarray
   +bus_voltages() : ndarray
   +compute_power_injection(bus, ybus, voltages)
-  +compute_power_mismatch(buses, ybus, voltages) : list
+  +compute_power_mismatch(buses, ybus, voltages) : ndarray
 }
 
 class Jacobian {
@@ -123,6 +128,21 @@ class PowerFlow {
   +mismatch_vector(circuit) : ndarray
 }
 
+class Solver {
+  -_pf : PowerFlow
+  +mode : str
+  +converged : bool
+  +iterations : int
+  +fault_current : complex
+  +fault_voltages : dict
+  --
+  +__init__(mode: str = "power_flow")
+  +run(circuit, tol, max_iter, faulted_bus_name, prefault_voltage, verbose) : Solver
+  -_run_power_flow(circuit, tol, max_iter, verbose)
+  -_run_fault(circuit, faulted_bus_name, prefault_voltage)
+  +__repr__()
+}
+
 Circuit "1" *-- "0..*" Bus : contains
 Circuit "1" *-- "0..*" Transformer : contains
 Circuit "1" *-- "0..*" TransmissionLine : contains
@@ -143,5 +163,8 @@ PowerFlow "1" *-- "1" Jacobian : owns
 PowerFlow ..> Circuit : solve()\nmismatch_vector()\n(reads/writes buses,\nybus, injections)
 
 Jacobian ..> Circuit : calculate_jacobian()\n(buses, ybus from\ncircuit state)
+
+Solver "1" *-- "1" PowerFlow : owns
+Solver ..> Circuit : run()\n(delegates to PowerFlow\nor fault methods)
 
 @enduml
