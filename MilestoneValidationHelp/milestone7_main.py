@@ -66,14 +66,4 @@ voltages = circuit.bus_voltages()
 
 jac = Jacobian()
 J = jac.calculate_jacobian(circuit.buses, circuit.ybus, angles, voltages)
-
-# Use safe labels: if the Jacobian is larger than the bus list, fall back to generic row/column names.
-bus_names = list(circuit.buses.keys())
-print_matrix(
-    "Jacobian Matrix J:",
-    J,
-    row_labels=bus_names,
-    col_labels=bus_names
-)
-
-print()
+print(J)
