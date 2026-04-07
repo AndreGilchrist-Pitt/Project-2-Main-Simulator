@@ -7,33 +7,6 @@ from Src.Utils.Classes.circuit import Circuit
 from Src.Utils.Classes.settings import Settings
 from Src.Utils.Classes.jacobian import Jacobian
 
-
-def print_matrix(label, matrix, row_labels=None, col_labels=None, precision=4, width=12):
-    print(f"\n{label}")
-
-    if col_labels is not None:
-        print(f"{'':<{width}}", end="")
-        for col in col_labels:
-            print(f"{col:>{width}}", end="")
-        print()
-
-    for i, row in enumerate(matrix):
-        if row_labels is not None and i < len(row_labels):
-            row_name = row_labels[i]
-        else:
-            row_name = f"r{i + 1}"
-
-        print(f"{row_name:<{width}}", end="")
-
-        for val in row:
-            if isinstance(val, complex):
-                text = f"{val.real:+.{precision}f}{val.imag:+.{precision}f}j"
-            else:
-                text = f"{val:.{precision}f}"
-            print(f"{text:>{width}}", end="")
-        print()
-
-
 Bus._bus_counter = 0
 Bus._bus_registry.clear()
 
