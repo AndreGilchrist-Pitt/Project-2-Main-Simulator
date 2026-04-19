@@ -46,7 +46,7 @@ print(f"Converged: {pf_solver.converged} in {pf_solver.iterations} iterations")
 
 # --- Fault Study ---
 fault_solver = Solver(mode="fault")
-fault_solver.run(circuit, faulted_bus_name="Bus1", prefault_voltage=1.05)
+fault_solver.run(circuit, faulted_bus_name="Bus2", prefault_voltage=1.05)
 
 print(f"\nFault Current: {abs(fault_solver.fault_current):.4f} pu")
 for name, v in fault_solver.fault_voltages.items():

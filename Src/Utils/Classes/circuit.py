@@ -327,24 +327,27 @@ class Circuit:
         return voltages
 
     def calc_ybus_fault(self) -> np.ndarray:
-        """
-        Build a faulted Ybus by adding generator subtransient admittances
-        to the diagonal of the existing Ybus.
-
-        Each generator with x_subtransient > 0 contributes y = 1 / (j * X")
-        to its bus diagonal.
-
-        Returns:
-            ybus_fault: Modified Ybus as an N×N complex ndarray.
-
-        Raises:
-            ValueError: If calc_ybus() has not been called first.
-        """
-        if self.ybus is None:
-            raise ValueError("calc_ybus() must be called before calc_ybus_fault()")
-
+        N = len(self.buses)
         bus_index = {name: idx for idx, name in enumerate(self.buses)}
-        ybus_fault = self.ybus.copy()
+        ybus_fault = np.zeros((N, N), dtype=complex)
+
+        for xfmr in self.transformers.values():
+            i = bus_index[xfmr.bus1_name]
+            j = bus_index[xfmr.bus2_name]
+            y = 1 / (1j * xfmr.x)
+            ybus_fault[i, i] += y
+            ybus_fault[j, j] += y
+            ybus_fault[i, j] -= y
+            ybus_fault[j, i] -= y
+
+        for line in self.transmission_lines.values():
+            i = bus_index[line.bus1_name]
+            j = bus_index[line.bus2_name]
+            y = 1 / (1j * line.x)
+            ybus_fault[i, i] += y
+            ybus_fault[j, j] += y
+            ybus_fault[i, j] -= y
+            ybus_fault[j, i] -= y
 
         for gen in self.generators.values():
             if gen.x_subtransient == 0.0:
@@ -352,9 +355,8 @@ class Circuit:
                     f"Generator '{gen.name}' has x_subtransient=0. "
                     "Set a valid subtransient reactance for fault analysis."
                 )
-            y_gen = 1 / (1j * gen.x_subtransient)
-            idx = bus_index[gen.bus1_name]
-            ybus_fault[idx, idx] += y_gen
+            i = bus_index[gen.bus1_name]
+            ybus_fault[i, i] += 1 / (1j * gen.x_subtransient)
 
         return ybus_fault
 
