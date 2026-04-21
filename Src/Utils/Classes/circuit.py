@@ -1,3 +1,4 @@
+from typing import Optional
 import numpy as np
 
 from Src.Utils.Classes.bus import Bus
@@ -6,7 +7,7 @@ from Src.Utils.Classes.transmissionLine import TransmissionLine
 from Src.Utils.Classes.generator import Generator
 from Src.Utils.Classes.load import Load
 from Src.Utils.Classes.settings import Settings
-
+from Src.Utils.Classes.solver import Solver
 class Circuit:
     """
     Represents a complete power system network.
@@ -29,6 +30,7 @@ class Circuit:
         self.generators = {}
         self.loads = {}
         self.ybus = None
+        self.solver: Optional[Solver] = None
     def calc_ybus(self):
         """
         Compute the system Ybus (nodal admittance) matrix.
@@ -160,7 +162,7 @@ class Circuit:
 
         line = TransmissionLine(name, bus1_name, bus2_name, r, x, g, b)
         self.transmission_lines[name] = line
-    def add_generator(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float):
+    def add_generator(self, name: str, bus1_name: str, voltage_setpoint: float, mw_setpoint: float,x_subtransient: float = 0.0):
         """
         Add a generator to the circuit.
 
@@ -169,14 +171,14 @@ class Circuit:
             bus1_name: Name of the bus where the generator is connected
             voltage_setpoint: Voltage magnitude setpoint in per-unit
             mw_setpoint: Active power generation setpoint in megawatts (MW)
-
+            x_subtransient: Subtransient reactance in per-unit (default 0.0)
         Raises:
             ValueError: If a generator with the same name already exists
         """
         if name in self.generators:
             raise ValueError(f"Generator '{name}' already exists in the circuit")
 
-        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint)
+        generator = Generator(name, bus1_name, voltage_setpoint, mw_setpoint,x_subtransient)
         self.generators[name] = generator
     def add_load(self, name: str, bus1_name: str, mw: float, mvar: float):
         """
@@ -325,6 +327,124 @@ class Circuit:
     def bus_voltages(self):
         voltages = np.array([bus.vpu for bus in self.buses.values()])
         return voltages
+
+    def calc_ybus_fault(self) -> np.ndarray:
+        N = len(self.buses)
+        bus_index = {name: idx for idx, name in enumerate(self.buses)}
+        ybus_fault = np.zeros((N, N), dtype=complex)
+
+        for xfmr in self.transformers.values():
+            i = bus_index[xfmr.bus1_name]
+            j = bus_index[xfmr.bus2_name]
+            y = 1 / (1j * xfmr.x)
+            ybus_fault[i, i] += y
+            ybus_fault[j, j] += y
+            ybus_fault[i, j] -= y
+            ybus_fault[j, i] -= y
+
+        for line in self.transmission_lines.values():
+            i = bus_index[line.bus1_name]
+            j = bus_index[line.bus2_name]
+            y = 1 / (1j * line.x)
+            ybus_fault[i, i] += y
+            ybus_fault[j, j] += y
+            ybus_fault[i, j] -= y
+            ybus_fault[j, i] -= y
+
+        for gen in self.generators.values():
+            if gen.x_subtransient == 0.0:
+                raise ValueError(
+                    f"Generator '{gen.name}' has x_subtransient=0. "
+                    "Set a valid subtransient reactance for fault analysis."
+                )
+            i = bus_index[gen.bus1_name]
+            ybus_fault[i, i] += 1 / (1j * gen.x_subtransient)
+
+        return ybus_fault
+
+    def calc_zbus(self, ybus_fault: np.ndarray) -> np.ndarray:
+        """
+        Compute the bus impedance matrix by inverting the faulted Ybus.
+
+        Args:
+            ybus_fault: The faulted Ybus matrix (N×N complex ndarray).
+
+        Returns:
+            zbus: N×N complex bus impedance matrix.
+        """
+        zbus = np.linalg.inv(ybus_fault)
+        return zbus
+
+    def calc_fault_current(self, zbus: np.ndarray, faulted_bus_name: str,
+                           prefault_voltage: float = 1.0) -> complex:
+        """
+        Calculate the fault current for a bolted three-phase fault.
+
+        Args:
+            zbus: Bus impedance matrix (N×N complex ndarray).
+            faulted_bus_name: Name of the bus where the fault occurs.
+            prefault_voltage: Prefault voltage in per-unit (default 1.0).
+
+        Returns:
+            I_fault: Fault current in per-unit (complex).
+        """
+        bus_index = {name: idx for idx, name in enumerate(self.buses)}
+        n = bus_index[faulted_bus_name]
+        Z_nn = zbus[n, n]
+        return prefault_voltage / Z_nn
+
+    def calc_fault_voltages(self, zbus: np.ndarray, faulted_bus_name: str,
+                            prefault_voltage: float = 1.0) -> dict:
+        """
+        Calculate post-fault bus voltages for a bolted three-phase fault.
+
+        Vi_post = Vf - (Z_in / Z_nn) * Vf  for each bus i.
+        The faulted bus voltage will be 0.0 p.u.
+
+        Args:
+            zbus: Bus impedance matrix (N×N complex ndarray).
+            faulted_bus_name: Name of the faulted bus.
+            prefault_voltage: Prefault voltage in per-unit (default 1.0).
+
+        Returns:
+            voltages: Dict of {bus_name: post-fault voltage (complex p.u.)}.
+        """
+        bus_index = {name: idx for idx, name in enumerate(self.buses)}
+        n = bus_index[faulted_bus_name]
+        Z_nn = zbus[n, n]
+
+        voltages = {}
+        for bus_name, idx in bus_index.items():
+            Z_in = zbus[idx, n]
+            voltages[bus_name] = prefault_voltage - (Z_in / Z_nn) * prefault_voltage
+
+        return voltages
+
+    def solve(self, mode: str = "power_flow", tol: float = 1e-4,
+              max_iter: int = 50, faulted_bus_name: str = None,
+              prefault_voltage: float = 1.0, verbose: bool = False) -> Solver:
+        """
+        Run power flow or fault analysis on this circuit.
+
+        Power flow uses self.ybus (lines + transformers).
+        Fault study uses self.ybus_fault (adds generator subtransient reactances).
+        """
+        if mode == "power_flow":
+            if self.ybus is None:
+                self.calc_ybus()
+        elif mode == "fault":
+            self.calc_ybus_fault()
+
+        self.solver = Solver(mode=mode)
+        self.solver.run(
+            self,
+            tol=tol,
+            max_iter=max_iter,
+            faulted_bus_name=faulted_bus_name,
+            prefault_voltage=prefault_voltage,
+            verbose=verbose,
+        )
+        return self.solver
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Moved to MilestoneValidationHelp ===\n")

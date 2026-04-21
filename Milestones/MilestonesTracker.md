@@ -150,6 +150,11 @@ Comments/Notes:
 |-----------|-------------|-----------------|--------------|------------|-------|
 | 3/23/2026 | Milestone 8 | PowerFlow, milestone8_main, Milestone8.md, `.gitignore` (`.vscode/`) | — | Instructor review / PowerWorld optional | — |
 
+## Milestone 9:
+| Date     | Milestone   | Progress Update                        | Issues/Risks | Next Steps | Owner |
+|----------|-------------|----------------------------------------|--------------|------------|-------|
+| 4/7/2026 | Milestone 9 | Generator/circuit/solver class updates | — | JW review  | AG    |
+
 ## Weekly/Check-In Log
 | Date      | Milestone       | Progress Update                                                                                 | Issues/Risks | Next Steps      | Owner |
 |-----------|-----------------|-------------------------------------------------------------------------------------------------|--------------|-----------------|----|
@@ -167,21 +172,22 @@ Comments/Notes:
 | 3/17/2026 | Milestone 5 & 6 | Updated Milestone 5 (Merged to Main and Milestone5 branch) and 6. Settings Class was refactored | None         |  | AG |
 | 3/23/2026 | Milestone 8     | Newton–Raphson: `PowerFlow`, `milestone8_main.py`, updated `Milestone8.md` & tracker | None | Push to `Development` | — |
 ## Change Log
-| Date      | Change  | Reason                                                         | Approved By |
-|-----------|---------|----------------------------------------------------------------|-------------|
-| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main                | AG          |
-| 2/12/2026 | a5a3186 | Created Milestone 2                                            | AG          |
-| 2/12/2026 | a369a02 | Updated Milestone Tracker                                      | AG          |
-| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents                 | AG          |
-| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                                 | AG          |
-| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker                        | AG          |
-| 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine    | JW          |
-| 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property | AG          |
-| 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                       | AG          |
-| 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                 | AG          |
-| 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                 | AG          |
-| 3/5/2026  | f831176 | Update to include main.py                                      | AG          |
-| 3/6/2026  | 67851cc | Updates for milestone 5                                        | AG          |
-| 3/13/2026 | 8c2617b | Updates for milestone 6                                        | AG          |
-| 3/17/2026 | 5bead86 | Updates for milestone 5 settings class and Milestone 6         | AG          |
-| 3/23/2026 | —       | Milestone 8: PowerFlow, milestone8_main, Milestone8.md; tracker (M7+M8 sections, weekly log); `.gitignore` `.vscode/` | —   |
+| Date      | Change  | Reason                                                                                                                | Approved By |
+|-----------|---------|-----------------------------------------------------------------------------------------------------------------------|-------------|
+| 2/12/2026 | e230a0d | Updated Completed Milestone1<br/>Merged to Main                                                                       | AG          |
+| 2/12/2026 | a5a3186 | Created Milestone 2                                                                                                   | AG          |
+| 2/12/2026 | a369a02 | Updated Milestone Tracker                                                                                             | AG          |
+| 2/12/2026 | 9aeb4c9 | Created Circuit class and supporting documents                                                                        | AG          |
+| 2/17/2026 | 5948e70 | Merged Circuit class Dev->Main                                                                                        | AG          |
+| 2/19/2026 | 4d0f49f | Update Milestone 3 & 4 Info and Tracker                                                                               | AG          |
+| 2/22/2026 | 5366793 | Implemented calc_yprim for Transformer and TransmissionLine                                                           | JW          |
+| 2/23/2026 | 0c0567e | Reviewed JW updates. Updated Yseries and Yshunt with @property                                                        | AG          |
+| 2/24/2026 | f386dec | Update to Milestone 3 Yseries and Yshunt                                                                              | AG          |
+| 2/24/2026 | d3510ea | Update to Milestone 4 calc_bus                                                                                        | AG          |
+| 2/26/2026 | 2b7c650 | Update to Milestone 4 calc_bus                                                                                        | AG          |
+| 3/5/2026  | f831176 | Update to include main.py                                                                                             | AG          |
+| 3/6/2026  | 67851cc | Updates for milestone 5                                                                                               | AG          |
+| 3/13/2026 | 8c2617b | Updates for milestone 6                                                                                               | AG          |
+| 3/17/2026 | 5bead86 | Updates for milestone 5 settings class and Milestone 6                                                                | AG          |
+| 3/23/2026 | —       | Milestone 8: PowerFlow, milestone8_main, Milestone8.md; tracker (M7+M8 sections, weekly log); `.gitignore` `.vscode/` | —           |
+| 4/7/2026  | 16a026c | Milestone 9: Generator/Circuit/Solver Class updates                                                                   | AG          |
