@@ -10,9 +10,9 @@ class Settings {
 }
 
 class Bus {
-  -_bus_counter : int
-  -_bus_registry : dict
-  -_valid_bus_types : dict
+  -{static} _bus_counter : int
+  -{static} _bus_registry : dict
+  -{static} _valid_bus_types : dict
   +name : str
   +nominal_kv : float
   +bus_index : int
@@ -21,7 +21,8 @@ class Bus {
   +bus_type : str
   --
   +__init__(name: str, nominal_kv: float, vpu: float = 1.0, delta: float = 0.0, bus_type: str = None)
-  +get_bus_index(name: str)
+  +{static} get_bus_index(name: str)
+  -{static} _validate_bus_type(bus_type: str) : str
 }
 
 class Generator {
@@ -57,9 +58,11 @@ class Transformer {
   +bus2_name : str
   +r : float
   +x : float
-  +Yseries : complex
+  -_yseries : complex
+  +Yseries : complex <<property>>
   --
   +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float)
+  -_calc_Yseries() : complex
   +calc_yprim() : pd.DataFrame
   +__repr__()
 }
@@ -72,10 +75,14 @@ class TransmissionLine {
   +x : float
   +g : float
   +b : float
-  +Yseries : complex
-  +Yshunt : complex
+  -_yseries : complex
+  -_yshunt : complex
+  +Yseries : complex <<property>>
+  +Yshunt : complex <<property>>
   --
   +__init__(name: str, bus1_name: str, bus2_name: str, r: float, x: float, g: float, b: float)
+  -_calc_Yseries() : complex
+  -_calc_Yshunt() : complex
   +calc_yprim() : pd.DataFrame
   +__repr__()
 }
@@ -88,33 +95,44 @@ class Circuit {
   +generators : dict
   +loads : dict
   +ybus : ndarray
+  +solver : Solver
+  +voltage_vector_polar : list <<property>>
+  +voltage_vector_rectangular : ndarray <<property>>
   --
   +__init__(name: str)
-  +add_bus(...)
-  +add_transformer(...)
-  +add_transmission_line(...)
-  +add_generator(...)
-  +add_load(...)
+  +add_bus(name, nominal_kv, vpu=1.0, delta=0.0, bus_type=None)
+  +add_transformer(name, bus1_name, bus2_name, r, x)
+  +add_transmission_line(name, bus1_name, bus2_name, r, x, g, b)
+  +add_generator(name, bus1_name, voltage_setpoint, mw_setpoint, x_subtransient=0.0)
+  +add_load(name, bus1_name, mw, mvar)
   +calc_ybus() : void
   +calc_ybus_fault() : ndarray
   +calc_zbus(ybus_fault) : ndarray
-  +calc_fault_current(zbus, faulted_bus_name, prefault_voltage) : complex
-  +calc_fault_voltages(zbus, faulted_bus_name, prefault_voltage) : dict
-  +voltage_vector_polar : property
-  +voltage_vector_rectangular : property
+  +calc_fault_current(zbus, faulted_bus_name, prefault_voltage=1.0) : complex
+  +calc_fault_voltages(zbus, faulted_bus_name, prefault_voltage=1.0) : dict
   +bus_angles() : ndarray
   +bus_voltages() : ndarray
-  +compute_power_injection(bus, ybus, voltages)
+  -_real_power_injection(bus, ybus, voltages) : float
+  -_reactive_power_injection(bus, ybus, voltages) : float
+  +compute_power_injection(bus, ybus, voltages) : (float, float)
   +compute_power_mismatch(buses, ybus, voltages) : ndarray
+  +solve(mode="power_flow", tol=1e-4, max_iter=50, faulted_bus_name=None, prefault_voltage=1.0, verbose=False) : Solver
 }
 
 class Jacobian {
   +J : ndarray
   --
   +__init__()
-  +calculate_jacobian(buses, ybus, angles, voltages) : ndarray
-  +PQ_BUSES(buses) : list
+  -_non_slack_buses(buses) : list
+  -_pq_buses(buses) : list
   +NON_SLACK_BUSES(buses) : list
+  +PQ_BUSES(buses) : list
+  -_power_injections(ybus, angles, voltages) : (ndarray, ndarray)
+  -_build_j1(ybus, angles, voltages, p_buses) : ndarray
+  -_build_j2(ybus, angles, voltages, p_buses, pq_buses) : ndarray
+  -_build_j3(ybus, angles, voltages, pq_buses, p_buses) : ndarray
+  -_build_j4(ybus, angles, voltages, pq_buses) : ndarray
+  +calculate_jacobian(buses, ybus, angles, voltages) : ndarray
 }
 
 class PowerFlow {
@@ -124,11 +142,14 @@ class PowerFlow {
   +final_mismatch_max : float
   --
   +__init__()
-  +solve(circuit, tol: float = 0.001, max_iter: int = 50, verbose: bool = false)
+  +{static} _non_slack_buses(buses) : list
+  +{static} _pq_buses(buses) : list
   +mismatch_vector(circuit) : ndarray
+  +solve(circuit, tol=0.001, max_iter=50, verbose=False)
 }
 
 class Solver {
+  +{static} VALID_MODES : set
   -_pf : PowerFlow
   +mode : str
   +converged : bool
@@ -137,21 +158,25 @@ class Solver {
   +fault_voltages : dict
   --
   +__init__(mode: str = "power_flow")
-  +run(circuit, tol, max_iter, faulted_bus_name, prefault_voltage, verbose) : Solver
+  +run(circuit, tol=1e-4, max_iter=50, faulted_bus_name=None, prefault_voltage=1.0, verbose=False) : Solver
   -_run_power_flow(circuit, tol, max_iter, verbose)
   -_run_fault(circuit, faulted_bus_name, prefault_voltage)
   +__repr__()
 }
 
+' Containment
 Circuit "1" *-- "0..*" Bus : contains
 Circuit "1" *-- "0..*" Transformer : contains
 Circuit "1" *-- "0..*" TransmissionLine : contains
 Circuit "1" *-- "0..*" Generator : contains
 Circuit "1" *-- "0..*" Load : contains
+Circuit "1" o-- "0..1" Solver : owns (after solve())
 
+' Settings usage
 Generator ..> Settings : calc_p()\n(Settings.sbase)
 Load ..> Settings : calc_p/q()\n(Settings.sbase)
 
+' Bus connectivity
 Generator "1" --> "1" Bus : connects to\n(bus1_name)
 Load "1" --> "1" Bus : connects to\n(bus1_name)
 Transformer "1" --> "1" Bus : bus1_name
@@ -159,12 +184,13 @@ Transformer "1" --> "1" Bus : bus2_name
 TransmissionLine "1" --> "1" Bus : bus1_name
 TransmissionLine "1" --> "1" Bus : bus2_name
 
-PowerFlow "1" *-- "1" Jacobian : owns
-PowerFlow ..> Circuit : solve()\nmismatch_vector()\n(reads/writes buses,\nybus, injections)
-
-Jacobian ..> Circuit : calculate_jacobian()\n(buses, ybus from\ncircuit state)
-
+' Solver composition
 Solver "1" *-- "1" PowerFlow : owns
-Solver ..> Circuit : run()\n(delegates to PowerFlow\nor fault methods)
+PowerFlow "1" *-- "1" Jacobian : owns
+
+' Dependencies
+PowerFlow ..> Circuit : solve()\nmismatch_vector()\n(reads/writes buses,\nybus, injections)
+Jacobian ..> Circuit : calculate_jacobian()\n(buses, ybus from\ncircuit state)
+Solver ..> Circuit : run()\n(power flow or\nfault analysis)
 
 @enduml

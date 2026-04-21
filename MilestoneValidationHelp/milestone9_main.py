@@ -39,24 +39,49 @@ circuit.add_load("Load3", "Bus3", 80.0, 40.0)
 
 circuit.calc_ybus()
 
+
+def _print_matrix(title, M, bus_names, part="imag", fmt="{:+10.5f}j"):
+    """Print an N×N complex matrix with bus-name headers.
+       part: 'imag', 'real', or 'both'."""
+    print(f"\n{title}")
+    header = "        " + "  ".join(f"{n:>10}" for n in bus_names)
+    print(header)
+    for i, name in enumerate(bus_names):
+        cells = []
+        for j in range(len(bus_names)):
+            z = M[i, j]
+            if part == "imag":
+                cells.append(fmt.format(z.imag))
+            elif part == "real":
+                cells.append(fmt.format(z.real))
+            else:  # both
+                cells.append(f"{z.real:+.4f}{z.imag:+.4f}j")
+        print(f"{name:>6}  " + "  ".join(cells))
 # --- Power Flow ---
-pf_solver = Solver(mode="power_flow")
-pf_solver.run(circuit, tol=1e-4, verbose=True)
-print(f"Converged: {pf_solver.converged} in {pf_solver.iterations} iterations")
+pf = circuit.solve(mode="power_flow", tol=1e-4, verbose=True)
+print(f"Converged: {pf.converged} in {pf.iterations} iterations")
 
-# --- Fault Study ---
-fault_solver = Solver(mode="fault")
-fault_solver.run(circuit, faulted_bus_name="Bus2", prefault_voltage=1.05)
-
-print(f"\nFault Current: {abs(fault_solver.fault_current):.4f} pu")
-for name, v in fault_solver.fault_voltages.items():
-    print(f"  {name}: {abs(v):.4f} pu")
+# Fault Study
+fs = circuit.solve(mode="fault", faulted_bus_name="Bus2", prefault_voltage=1.05)
+bus_names = list(circuit.buses)
 
 ybus_fault = circuit.calc_ybus_fault()
 zbus = circuit.calc_zbus(ybus_fault)
 
-print("\nZbus diagonal (imaginary part):")
-for i, name in enumerate(circuit.buses):
-    z_nn = zbus[i, i].imag
-    i_fault = 1.05 / z_nn
-    print(f"  {name}: Z_nn = {z_nn:.7f} pu  →  I_fault = {i_fault:.4f} pu")
+_print_matrix("Ybus_fault (imag, pu)", ybus_fault, bus_names, part="imag")
+_print_matrix("Zbus (imag, pu)", zbus, bus_names, part="imag")
+print(f"Fault Current: {abs(fs.fault_current):.4f} pu")
+print("\n--- Fault voltage sweep (Vf = 1.05) ---")
+bus_names = list(circuit.buses)
+header = "           " + "  ".join(f"{n:>6}" for n in bus_names)
+print(header)
+fault_results = {}
+for faulted in bus_names:
+    fs = circuit.solve(mode="fault", faulted_bus_name=faulted, prefault_voltage=1.05)
+    fault_results[faulted] = fs
+for faulted in bus_names:
+    fs = fault_results[faulted]
+    mags = [abs(fault_results[obs].fault_voltages[faulted]) for obs in bus_names]
+    row = "  ".join(f"{m:6.4f}" for m in mags)
+    print(f"Fault@{faulted}  {row}  |I_f|={abs(fs.fault_current):8.4f} pu")
+print()

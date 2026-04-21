@@ -1,3 +1,4 @@
+from typing import Optional
 import numpy as np
 
 from Src.Utils.Classes.bus import Bus
@@ -6,7 +7,7 @@ from Src.Utils.Classes.transmissionLine import TransmissionLine
 from Src.Utils.Classes.generator import Generator
 from Src.Utils.Classes.load import Load
 from Src.Utils.Classes.settings import Settings
-
+from Src.Utils.Classes.solver import Solver
 class Circuit:
     """
     Represents a complete power system network.
@@ -29,6 +30,7 @@ class Circuit:
         self.generators = {}
         self.loads = {}
         self.ybus = None
+        self.solver: Optional[Solver] = None
     def calc_ybus(self):
         """
         Compute the system Ybus (nodal admittance) matrix.
@@ -370,7 +372,8 @@ class Circuit:
         Returns:
             zbus: N×N complex bus impedance matrix.
         """
-        return np.linalg.inv(ybus_fault)
+        zbus = np.linalg.inv(ybus_fault)
+        return zbus
 
     def calc_fault_current(self, zbus: np.ndarray, faulted_bus_name: str,
                            prefault_voltage: float = 1.0) -> complex:
@@ -416,6 +419,32 @@ class Circuit:
             voltages[bus_name] = prefault_voltage - (Z_in / Z_nn) * prefault_voltage
 
         return voltages
+
+    def solve(self, mode: str = "power_flow", tol: float = 1e-4,
+              max_iter: int = 50, faulted_bus_name: str = None,
+              prefault_voltage: float = 1.0, verbose: bool = False) -> Solver:
+        """
+        Run power flow or fault analysis on this circuit.
+
+        Power flow uses self.ybus (lines + transformers).
+        Fault study uses self.ybus_fault (adds generator subtransient reactances).
+        """
+        if mode == "power_flow":
+            if self.ybus is None:
+                self.calc_ybus()
+        elif mode == "fault":
+            self.calc_ybus_fault()
+
+        self.solver = Solver(mode=mode)
+        self.solver.run(
+            self,
+            tol=tol,
+            max_iter=max_iter,
+            faulted_bus_name=faulted_bus_name,
+            prefault_voltage=prefault_voltage,
+            verbose=verbose,
+        )
+        return self.solver
 if __name__ == "__main__":
     # Validation tests from Milestone 2
     print("=== Moved to MilestoneValidationHelp ===\n")
