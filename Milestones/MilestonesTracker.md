@@ -205,6 +205,6 @@ Comments/Notes:
 | 3/17/2026 | 5bead86 | Updates for milestone 5 settings class and Milestone 6                                                                | AG          |
 | 3/23/2026 | —       | Milestone 8: PowerFlow, milestone8_main, Milestone8.md; tracker (M7+M8 sections, weekly log); `.gitignore` `.vscode/` | —           |
 | 4/7/2026  | 16a026c | Milestone 9: Generator/Circuit/Solver Class updates                                                                   | AG          |
-| 4/7/2026  | f36b9d6 | Updated to faulted ybus ( dont reuse ybus from prior runs)                                                                   | AG          |
-| 4/7/2026  | 3a9b4de | update to milestone 9                                                                  | AG          |
-| 4/7/2026  | 715d55b | Update powerflow.py                                                                   | AG          |
+| 4/19/2026 | f36b9d6 | Updated to faulted ybus ( dont reuse ybus from prior runs)                                                                   | AG          |
+| 4/21/2026 | 3a9b4de | update to milestone 9                                                                  | AG          |
+| 4/23/2026 | 715d55b | Update powerflow.py                                                                   | AG          |
