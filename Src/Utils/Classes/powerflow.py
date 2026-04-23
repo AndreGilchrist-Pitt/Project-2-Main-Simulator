@@ -54,7 +54,6 @@ class PowerFlow:
 
         for k in range(max_iter):
             v_complex = circuit.voltage_vector_rectangular
-            #f = self._mismatch_vector_block_ordered(circuit, buses, ybus, v_complex)
             f = circuit.compute_power_mismatch(buses, ybus, v_complex)
             self.final_mismatch_max = float(np.max(np.abs(f)))
 
