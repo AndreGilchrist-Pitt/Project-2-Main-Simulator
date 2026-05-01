@@ -6,6 +6,8 @@ from Src.Utils.Classes.load import Load
 from Src.Utils.Classes.circuit import Circuit
 from Src.Utils.Classes.settings import Settings
 
+#calc ybus matrix
+
 Bus._bus_counter = 0
 Bus._bus_registry.clear()
 

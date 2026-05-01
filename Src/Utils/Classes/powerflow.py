@@ -59,7 +59,7 @@ class PowerFlow:
             self.final_mismatch_max = float(np.max(np.abs(f)))
 
             if verbose:
-                print(f"  NR iter {k}: max|f| = {self.final_mismatch_max:.6g}")
+                print(f"  NR iter {k}: max|f|: {self.final_mismatch_max:.6g}")
 
             if self.final_mismatch_max < tol:
                 self.converged = True

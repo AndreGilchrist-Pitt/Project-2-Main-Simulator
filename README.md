@@ -1,50 +1,26 @@
-# Project-2-Main-Simulator
+## Project 3 — time-series power flow + solar
 
-## Branches
-### **Milestone**
+### How to run
 
-- Milestone branches are dedicated submission branches for formal review and grading
-- Each milestone represents a specific deliverable or phase of the project
-  - Create a new milestone branch from `main` when ready to submit completed work
-  - Do not modify milestone branches after submission unless explicitly requested
-  - Example branch names: `Milestone1`, `Milestone2`, etc.
+Run the project3_main.py script from the repo root.
 
-### **main**
+User can change the time here:
+#SET TIME HERE, 0-24 hour scale, w/ 15 minute intervals
+time_window = "10:00-13:00"
 
-- Production/stable branch containing tested and approved code
-- All code here should be fully functional and tested
-- Direct commits are discouraged; use pull requests from Development
+That script utilizes 3 additional classes specific to Project 3.
 
-### **Development**
+day_simulation.py
+- creates the irradiance throughout the day at 15 minute intervals for 24 hours for a total of 360 steps
+- the irradiance vs time plot can be viewed if matlabplot package is installed
 
-- Active development branch for new features and changes
-- All new work should be done here first
-- Test your changes before merging to main
+solar_generation.py
+- this acts a circuit component modeling the solar panels and solar generation. 
+- user input is P and PF, user has the option to change the G cap and choose whether leading or lagging (lagging is more common for solar panels)
+- power generation and irradiance vs time plot can be viewed if matlabplot package is installed
 
-## Workflow
-
-1. **Start Development**: Switch to the `Development` branch
-2. **Make Changes**: Implement features, bug fixes, or improvements
-3. **Test**: Run unit tests to ensure functionality
-4. **Commit**: Commit changes to `Development` branch
-5. **Merge**: Once stable and tested, create a pull request to merge into `main`
-6. **Review**: Review changes before merging to production
-7. **Update**: Update `MilestonesTracker.md` with your latest changes to log progress
-
-
-## Directory Structure
-
-### Path Configuration
-
-The `Paths/paths.py` file defines centralized path constants for the project:
-
-- `PROJECT_ROOT`: Root directory of the project
-- `SRC_DIR`: Source code directory (`Src/`)
-- `MAIN_FILE`: Main entry point (`Src/main.py`)
-- `UTILS_DIR`: Utilities directory (`Src/Utils/`)
-- `CLASSES_DIR`: Classes directory (`Src/Utils/Classes/`)
-- `CLASS_DIAGRAMS_DIR`: Class diagrams directory (`Src/Utils/ClassDiagrams/`)
-- `UNITTEST_DIR`: Unit test directory (`UnitTest/`)
-- `UNITTEST_CLASSES_DIR`: Unit test classes directory (`UnitTest/Classes/`)
-- `MILESTONE_VALIDATION_HELP_DIR`: Milestone validation helper directory (`MilestoneValidationHelp/`)  
-Use these path constants in your code to ensure consistent file paths across the project.
+time_series_solver.py
+- this creates the time series simulation
+- step time is automatically chosen to be 15 minutes
+- user can input the time window in hours (e.g. 11:00-13:00)
+- class utilizes the solver.py for the powerflow algorithm

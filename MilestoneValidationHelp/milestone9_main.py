@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+#power flow and fault study
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
@@ -39,24 +41,37 @@ circuit.add_load("Load3", "Bus3", 80.0, 40.0)
 
 circuit.calc_ybus()
 
-# --- Power Flow ---
+print("\n\nPOWER FLOW (Solver mode: power_flow)\n\n")
+
 pf_solver = Solver(mode="power_flow")
 pf_solver.run(circuit, tol=1e-4, verbose=True)
 print(f"Converged: {pf_solver.converged} in {pf_solver.iterations} iterations")
 
-# --- Fault Study ---
-fault_solver = Solver(mode="fault")
-fault_solver.run(circuit, faulted_bus_name="Bus1", prefault_voltage=1.05)
+print("\n\nBus voltage (p.u.) and angle (deg):\n\n")
+for b in circuit.buses.values():
+    print(f"  {b.name}: vpu {b.vpu:.6f}, delta {b.delta:.6f}, type {b.bus_type}")
 
-print(f"\nFault Current: {abs(fault_solver.fault_current):.4f} pu")
+_fault_bus = "Bus1"
+_fault_v = 1.05
+print(
+    f"\n\nFAULT STUDY (Solver mode: fault). "
+    f"Faulted bus: {_fault_bus}. V_pref {_fault_v} pu\n"
+)
+
+fault_solver = Solver(mode="fault")
+fault_solver.run(circuit, faulted_bus_name=_fault_bus, prefault_voltage=_fault_v)
+
+print(f"\nFault current magnitude: {abs(fault_solver.fault_current):.4f} pu")
+print("\nPost-fault bus voltage magnitudes (pu):\n")
 for name, v in fault_solver.fault_voltages.items():
     print(f"  {name}: {abs(v):.4f} pu")
 
 ybus_fault = circuit.calc_ybus_fault()
 zbus = circuit.calc_zbus(ybus_fault)
 
-print("\nZbus diagonal (imaginary part):")
+print("\n\nZbus diagonal (imaginary part):\n\n")
 for i, name in enumerate(circuit.buses):
     z_nn = zbus[i, i].imag
-    i_fault = 1.05 / z_nn
-    print(f"  {name}: Z_nn = {z_nn:.7f} pu  →  I_fault = {i_fault:.4f} pu")
+    i_fault = _fault_v / z_nn
+    print(f"  {name}: Z_nn {z_nn:.7f} pu   I_fault {i_fault:.4f} pu")
+print("\n")

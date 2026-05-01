@@ -6,13 +6,15 @@ from Src.Utils.Classes.transmissionLine import TransmissionLine
 from Src.Utils.Classes.generator import Generator
 from Src.Utils.Classes.load import Load
 from Src.Utils.Classes.settings import Settings
+from Src.Utils.Classes.solar_generation import SolarGeneration
 
 class Circuit:
     """
     Represents a complete power system network.
 
     The Circuit class serves as a container for all equipment objects
-    (buses, transformers, transmission lines, generators, and loads).
+    (buses, transformers, transmission lines, generators, loads, and optional
+    solar plants via :meth:`add_solar_generation`).
     """
 
     def __init__(self, name: str):
@@ -28,6 +30,8 @@ class Circuit:
         self.transmission_lines = {}
         self.generators = {}
         self.loads = {}
+        self.solar_generations: dict[str, SolarGeneration] = {}
+        self.solar_dispatch_step: int = 0
         self.ybus = None
     def calc_ybus(self):
         """
@@ -196,6 +200,59 @@ class Circuit:
 
         load = Load(name, bus1_name, mw, mvar)
         self.loads[name] = load
+
+    def add_solar_generation(
+        self,
+        name: str,
+        bus1_name: str,
+        p_mw: float,
+        power_factor: float,
+        day_simulation,
+        *,
+        g_stc: float = 1000.0,
+        leading_power_factor: bool = False,
+        inject_reactive: bool = True,
+    ):
+        """
+        Add a solar plant (PQ-style scheduled P and optional Q in mismatch).
+
+        Attach to a **PQ** bus so voltage magnitude is an NR unknown; solar does not
+        imply a PV bus type. Dispatch uses ``solar_dispatch_step`` with
+        :meth:`set_solar_dispatch_step`. Injects P and Q at ``bus1_name`` in
+        :meth:`compute_power_mismatch` like generation at that bus.
+
+        Args:
+            name: Unique solar element name.
+            bus1_name: Connection bus (must already exist).
+            p_mw, power_factor, day_simulation, g_stc, leading_power_factor,
+            inject_reactive: Passed to :class:`SolarGeneration`.
+
+        Raises:
+            ValueError: Duplicate name or unknown bus.
+        """
+        if name in self.solar_generations:
+            raise ValueError(f"Solar generation '{name}' already exists in the circuit")
+        if bus1_name not in self.buses:
+            raise ValueError(f"Bus '{bus1_name}' not in circuit for solar '{name}'")
+
+        solar = SolarGeneration(
+            name,
+            bus1_name,
+            p_mw,
+            power_factor,
+            day_simulation,
+            g_stc=g_stc,
+            leading_power_factor=leading_power_factor,
+            inject_reactive=inject_reactive,
+        )
+        self.solar_generations[name] = solar
+
+    def set_solar_dispatch_step(self, step_index: int) -> None:
+        """Set the day index (0..N-1) used for all ``solar_generations`` in mismatch."""
+        if step_index < 0:
+            raise ValueError("step_index must be non-negative")
+        self.solar_dispatch_step = int(step_index)
+
     @property
     def voltage_vector_polar(self):
         return [(bus.vpu, bus.delta) for bus in self.buses.values()]
@@ -302,6 +359,12 @@ class Circuit:
         for load in self.loads.values():
             specs[load.bus1_name][0] -= load.p  # subtract load P
             specs[load.bus1_name][1] -= load.q  # subtract load Q
+
+        k = self.solar_dispatch_step
+        for solar in self.solar_generations.values():
+            specs[solar.bus1_name][0] += solar.calc_p_pu_at_step(k)
+            specs[solar.bus1_name][1] += solar.calc_q_pu_at_step(k)
+
         non_slack_buses = [b for b in buses.values() if b.bus_type != "Slack"]
         pq_buses = [b for b in buses.values() if b.bus_type == "PQ"]
 
